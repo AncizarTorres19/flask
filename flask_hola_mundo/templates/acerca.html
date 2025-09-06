@@ -4,12 +4,27 @@
     <meta charset="UTF-8">
     <title>Acerca de Nosotros</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
 <body>
-    <div class="container">
-        <h1>Acerca de Nosotros</h1>
-        <p>Flask es un framework web ligero y flexible para Python que permite crear aplicaciones web de manera rápida y eficiente. Flask sirve para construir desde sitios web simples hasta APIs complejas, proporcionando las herramientas esenciales para manejar rutas, plantillas, y funcionalidades web modernas de forma minimalista y elegante.</p>
-        <a href="/">Volver al inicio</a>
+    <div class="site">
+        <header class="nav">
+            <div class="brand">MiApp • Flask</div>
+            <nav class="actions">
+                <a class="btn btn-ghost" href="/">Inicio</a>
+                <a class="btn btn-ghost" href="/contacto">Contacto</a>
+            </nav>
+        </header>
+
+        <section class="card">
+            <h1>Acerca de Nosotros</h1>
+            <p class="muted">Flask es un microframework para Python que proporciona las herramientas básicas para crear aplicaciones web y APIs. Es minimalista, fácil de aprender y muy flexible, ideal para prototipos y proyectos que necesitan control total sobre la estructura.</p>
+            <div style="margin-top:16px">
+                <a class="btn btn-primary" href="/">Volver al inicio</a>
+            </div>
+        </section>
+
+        <footer class="footer">Acerca • MiApp</footer>
     </div>
 </body>
 </html>

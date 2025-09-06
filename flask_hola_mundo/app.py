@@ -1,18 +1,19 @@
-from flask import Flask, render_template
+from flask import Flask
+from blueprints import main_bp, contact_bp, auth_bp
 
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/contacto')
-def contacto():
-    return render_template('contacto.html')
-
-@app.route('/acerca')
-def acerca():
-    return render_template('acerca.html')
+def create_app():
+    """Factory function para crear la aplicación Flask"""
+    app = Flask(__name__)
+    # Clave de ejemplo para sesiones/flash. En producción use una variable de entorno segura.
+    app.config['SECRET_KEY'] = 'cambiar-esta-clave-por-una-segura'
+    
+    # Registrar blueprints
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(main_bp)
+    app.register_blueprint(contact_bp)
+    
+    return app
 
 if __name__ == '__main__':
+    app = create_app()
     app.run(debug=True)

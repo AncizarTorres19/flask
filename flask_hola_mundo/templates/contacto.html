@@ -4,11 +4,27 @@
     <meta charset="UTF-8">
     <title>Contacto</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
 <body>
-    <div class="container">
-        <h1>Página de contacto</h1>
-        <a href="/">Volver al inicio</a>
+    <div class="site">
+        <header class="nav">
+            <div class="brand">MiApp • Flask</div>
+            <nav class="actions">
+                <a class="btn btn-ghost" href="/">Inicio</a>
+                <a class="btn btn-ghost" href="/acerca">Acerca</a>
+            </nav>
+        </header>
+
+        <section class="card">
+            <h1>Contacto</h1>
+            <p class="muted">Escribe a contacto@miapp.local (ejemplo)</p>
+            <div style="margin-top:16px">
+                <a class="btn btn-primary" href="/">Volver al inicio</a>
+            </div>
+        </section>
+
+        <footer class="footer">Contacto • MiApp</footer>
     </div>
 </body>
 </html>
