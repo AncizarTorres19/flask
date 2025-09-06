@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil de {{ user.username }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+    <div class="site">
+        <header class="nav">
+            <div class="brand">Actividad • Usuarios</div>
+            <nav class="actions">
+                <a class="btn btn-ghost" href="/">Inicio</a>
+                <a class="btn btn-ghost" href="/users/settings">Ajustes</a>
+            </nav>
+        </header>
+
+        <section class="card">
+            <h1>Perfil: {{ user.username }}</h1>
+            <p class="muted">Correo: <strong>{{ user.email }}</strong></p>
+            <div style="margin-top:16px">
+                <a class="btn btn-primary" href="/users/settings">Editar configuración</a>
+            </div>
+        </section>
+
+        <footer class="footer">Actividad 05-09-2025 • Usuarios</footer>
+    </div>
+</body>
+</html>

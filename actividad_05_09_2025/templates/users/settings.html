@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajustes de usuario</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+    <div class="site">
+        <header class="nav">
+            <div class="brand">Actividad • Usuarios</div>
+            <nav class="actions">
+                <a class="btn btn-ghost" href="/">Inicio</a>
+                <a class="btn btn-ghost" href="/users/profile/usuario">Ver perfil</a>
+            </nav>
+        </header>
+
+        <section class="card">
+            <h1>Ajustes de cuenta</h1>
+            <p class="muted">Actualiza tu email y contraseña</p>
+
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <div style="margin:10px 0;padding:10px;background:rgba(255,255,255,0.03);border-radius:8px;color:var(--accent)">
+                  {% for msg in messages %}
+                    <div>{{ msg }}</div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+
+            <form class="form" method="post" action="">
+                <div class="field">
+                    <label for="email">Correo</label>
+                    <input id="email" name="email" type="email" value="{{ current.email }}" required>
+                </div>
+                <div class="field">
+                    <label for="password">Nueva contraseña</label>
+                    <input id="password" name="password" type="password" placeholder="Dejar en blanco para mantener" >
+                </div>
+
+                <div style="display:flex;gap:10px;align-items:center;justify-content:flex-end">
+                    <a class="btn btn-ghost" href="/">Cancelar</a>
+                    <button class="btn btn-primary" type="submit">Guardar</button>
+                </div>
+            </form>
+        </section>
+
+        <footer class="footer">Usuarios • Actividad</footer>
+    </div>
+</body>
+</html>
