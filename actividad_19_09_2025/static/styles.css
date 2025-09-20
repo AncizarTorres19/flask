@@ -1,0 +1,11 @@
+/* Estilos mínimos copiados del proyecto principal */
+:root{
+  --accent: #6ee7b7;
+  --muted: #94a3b8;
+  --glass: rgba(255,255,255,0.04);
+}
+body{background:linear-gradient(180deg,#071129,#0b1220);color:#e6eef8;font-family:Inter,Segoe UI,Arial}
+.site{max-width:980px;margin:40px auto;padding:24px}
+.brand{color:var(--accent);font-weight:700}
+.card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:28px;border-radius:14px}
+.footer{margin-top:28px;color:var(--muted);text-align:center}
