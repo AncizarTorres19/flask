@@ -1,116 +1,56 @@
 {% extends "base.html" %}
 
-{% block title %}Ver Usuario{% endblock %}
+{% block title %}{{ usuario.nombre }} - Detalles{% endblock %}
 
 {% block content %}
-<style>
-    .detail-container {
-        max-width: 500px;
-        margin: 0 auto;
-    }
-
-    .detail-card {
-        background: white;
-        border-radius: 8px;
-        padding: 30px;
-        border: 1px solid #e0e0e0;
-    }
-
-    .detail-title {
-        font-size: 20px;
-        font-weight: 600;
-        margin: 0 0 30px 0;
-        text-align: center;
-    }
-
-    .detail-field {
-        margin-bottom: 20px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #f0f0f0;
-    }
-
-    .detail-field:last-of-type {
-        border-bottom: none;
-        margin-bottom: 30px;
-        padding-bottom: 0;
-    }
-
-    .detail-label {
-        font-weight: 500;
-        color: #666;
-        font-size: 14px;
-        margin-bottom: 4px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .detail-value {
-        font-size: 16px;
-        color: #333;
-        margin: 0;
-    }
-
-    .detail-actions {
-        display: flex;
-        gap: 12px;
-        justify-content: flex-end;
-    }
-
-    .btn-delete {
-        background: #ff6b6b;
-        color: white;
-    }
-
-    .btn-delete:hover {
-        background: #ff5252;
-    }
-
-    @media (max-width: 640px) {
-        .detail-card {
-            padding: 20px;
-        }
-
-        .detail-actions {
-            flex-direction: column-reverse;
-        }
-
-        .detail-actions .btn {
-            width: 100%;
-        }
-    }
-</style>
-
-<div class="detail-container">
-    <div class="detail-card">
-        <h2 class="detail-title">Detalles del Usuario</h2>
-
-        <div class="detail-field">
-            <div class="detail-label">Nombre</div>
-            <p class="detail-value">{{ usuario.nombre }}</p>
+<div class="card">
+    <h1>👤 Detalles del Usuario</h1>
+    <p class="muted mb-24">Información completa de {{ usuario.nombre }}</p>
+    
+    <div class="form">
+        <div class="form-group">
+            <label>ID de Usuario</label>
+            <div class="form-control" style="background: rgba(255,255,255,0.02); cursor: default;">
+                #{{ usuario.id }}
+            </div>
         </div>
-
-        <div class="detail-field">
-            <div class="detail-label">Email</div>
-            <p class="detail-value">{{ usuario.email }}</p>
+        
+        <div class="form-group">
+            <label>Nombre Completo</label>
+            <div class="form-control" style="background: rgba(255,255,255,0.02); cursor: default;">
+                {{ usuario.nombre }}
+            </div>
         </div>
-
-        <div class="detail-field">
-            <div class="detail-label">Teléfono</div>
-            <p class="detail-value">{{ usuario.telefono or 'No especificado' }}</p>
+        
+        <div class="form-group">
+            <label>Correo Electrónico</label>
+            <div class="form-control" style="background: rgba(255,255,255,0.02); cursor: default;">
+                {{ usuario.email }}
+            </div>
         </div>
-
-        <div class="detail-field">
-            <div class="detail-label">Fecha de Creación</div>
-            <p class="detail-value">{{ usuario.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}</p>
+        
+        <div class="form-group">
+            <label>Teléfono</label>
+            <div class="form-control" style="background: rgba(255,255,255,0.02); cursor: default;">
+                {{ usuario.telefono or 'No especificado' }}
+            </div>
         </div>
-
-        <div class="detail-actions">
-            <a href="{{ url_for('index') }}" class="btn btn-secondary">Volver</a>
-            <a href="{{ url_for('editar_usuario', id=usuario.id) }}" class="btn btn-primary">Editar</a>
-            <form method="POST" action="{{ url_for('eliminar_usuario', id=usuario.id) }}" style="display: inline;"
-                  onsubmit="return confirm('¿Eliminar este usuario?')">
-                <button type="submit" class="btn btn-delete">Eliminar</button>
-            </form>
+        
+        <div class="form-group">
+            <label>Fecha de Registro</label>
+            <div class="form-control" style="background: rgba(255,255,255,0.02); cursor: default;">
+                {{ usuario.fecha_creacion.strftime('%d de %B de %Y a las %H:%M') }}
+            </div>
+        </div>
+        
+        <div class="actions">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">📋 Volver a Lista</a>
+            <a href="{{ url_for('editar', id=usuario.id) }}" class="btn btn-primary">✏️ Editar Usuario</a>
+            <a href="{{ url_for('eliminar', id=usuario.id) }}" 
+               class="btn btn-danger"
+               onclick="return confirm('¿Estás seguro de que deseas eliminar a {{ usuario.nombre }}?')">
+               🗑️ Eliminar Usuario
+            </a>
         </div>
     </div>
 </div>

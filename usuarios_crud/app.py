@@ -34,7 +34,7 @@ def index():
     return render_template('index.html', usuarios=usuarios)
 
 @app.route('/crear', methods=['GET', 'POST'])
-def crear_usuario():
+def crear():
     if request.method == 'POST':
         nombre = request.form['nombre']
         email = request.form['email']
@@ -61,7 +61,7 @@ def crear_usuario():
     return render_template('crear.html')
 
 @app.route('/editar/<int:id>', methods=['GET', 'POST'])
-def editar_usuario(id):
+def editar(id):
     usuario = Usuario.query.get_or_404(id)
 
     if request.method == 'POST':
@@ -87,8 +87,8 @@ def editar_usuario(id):
 
     return render_template('editar.html', usuario=usuario)
 
-@app.route('/eliminar/<int:id>', methods=['POST'])
-def eliminar_usuario(id):
+@app.route('/eliminar/<int:id>')
+def eliminar(id):
     usuario = Usuario.query.get_or_404(id)
 
     try:
@@ -102,7 +102,7 @@ def eliminar_usuario(id):
     return redirect(url_for('index'))
 
 @app.route('/ver/<int:id>')
-def ver_usuario(id):
+def ver(id):
     usuario = Usuario.query.get_or_404(id)
     return render_template('ver.html', usuario=usuario)
 
