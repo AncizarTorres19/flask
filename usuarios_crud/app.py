@@ -6,8 +6,8 @@ import os
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'tu_clave_secreta_aqui'
 
-# Configuración de base de datos (SQLite para pruebas, cambiar a PostgreSQL en producción)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///usuarios.db'
+# Configuración de base de datos - MySQL con PyMySQL
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost:3306/usuarios_db'
 # Para PostgreSQL: 'postgresql://username:password@localhost/usuarios_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
