@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} - Gestión de Usuarios</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="site">
+        <header class="nav">
+            <div class="brand">👥 Usuarios CRUD</div>
+            <nav class="nav-links">
+                <a href="{{ url_for('index') }}" class="btn btn-secondary btn-small">📋 Lista</a>
+                <a href="{{ url_for('crear') }}" class="btn btn-primary btn-small">➕ Agregar</a>
+            </nav>
+        </header>
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="footer">
+            Gestión de Usuarios • Sistema CRUD con Flask
+        </footer>
+    </div>
+</body>
+</html>

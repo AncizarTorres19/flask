@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Usuario{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>✏️ Editar Usuario</h1>
+    <p class="muted mb-24">Modifica la información de <strong>{{ usuario.nombre }}</strong></p>
+    
+    <form method="POST" class="form">
+        <div class="form-group">
+            <label for="nombre">Nombre completo</label>
+            <input type="text" id="nombre" name="nombre" class="form-control" 
+                   value="{{ usuario.nombre }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email" class="form-control" 
+                   value="{{ usuario.email }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="telefono">Teléfono</label>
+            <input type="tel" id="telefono" name="telefono" class="form-control" 
+                   value="{{ usuario.telefono or '' }}" placeholder="+1 234 567 8900">
+        </div>
+        
+        <div class="actions">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">❌ Cancelar</a>
+            <a href="{{ url_for('ver', id=usuario.id) }}" class="btn btn-secondary">👁️ Ver Detalles</a>
+            <button type="submit" class="btn btn-primary">💾 Guardar Cambios</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

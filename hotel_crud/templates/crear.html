@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Crear Usuario{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>➕ Agregar Nuevo Usuario</h1>
+    <p class="muted mb-24">Completa la información para crear un nuevo usuario</p>
+    
+    <form method="POST" class="form">
+        <div class="form-group">
+            <label for="nombre">Nombre completo</label>
+            <input type="text" id="nombre" name="nombre" class="form-control" 
+                   placeholder="Ingresa el nombre completo" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email" class="form-control" 
+                   placeholder="ejemplo@correo.com" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="telefono">Teléfono (opcional)</label>
+            <input type="tel" id="telefono" name="telefono" class="form-control" 
+                   placeholder="+1 234 567 8900">
+        </div>
+        
+        <div class="actions">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">❌ Cancelar</a>
+            <button type="submit" class="btn btn-primary">✅ Crear Usuario</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Usuarios{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>👥 Usuarios Registrados</h1>
+    <p class="muted mb-24">Gestiona todos los usuarios del sistema desde aquí</p>
+    
+    {% if usuarios %}
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Información del Usuario</th>
+                        <th>Teléfono</th>
+                        <th>Fecha de Registro</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td><strong>#{{ usuario.id }}</strong></td>
+                        <td>
+                            <div class="user-info">
+                                <div class="user-name">{{ usuario.nombre }}</div>
+                                <div class="user-email">{{ usuario.email }}</div>
+                            </div>
+                        </td>
+                        <td>{{ usuario.telefono or '-' }}</td>
+                        <td>
+                            <div class="user-date">{{ usuario.fecha_creacion.strftime('%d/%m/%Y') }}</div>
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <a href="{{ url_for('ver', id=usuario.id) }}" class="btn btn-secondary btn-small">👁️ Ver</a>
+                                <a href="{{ url_for('editar', id=usuario.id) }}" class="btn btn-primary btn-small">✏️ Editar</a>
+                                <a href="{{ url_for('eliminar', id=usuario.id) }}" 
+                                   class="btn btn-danger btn-small"
+                                   onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?')">
+                                   🗑️ Eliminar
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="text-center mt-24">
+            <p class="muted">Total de usuarios: <strong>{{ usuarios|length }}</strong></p>
+        </div>
+    {% else %}
+        <div class="text-center">
+            <h2>📭 No hay usuarios registrados</h2>
+            <p class="muted mb-24">Comienza agregando tu primer usuario</p>
+            <a href="{{ url_for('crear') }}" class="btn btn-primary">➕ Agregar Primer Usuario</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

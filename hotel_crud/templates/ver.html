@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}{{ usuario.nombre }} - Detalles{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>👤 Detalles del Usuario</h1>
+    <p class="muted mb-24">Información completa de {{ usuario.nombre }}</p>
+    
+    <div class="form">
+        <div class="form-group">
+            <label>ID de Usuario</label>
+            <div class="form-control" style="background: rgba(255,255,255,0.02); cursor: default;">
+                #{{ usuario.id }}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>Nombre Completo</label>
+            <div class="form-control" style="background: rgba(255,255,255,0.02); cursor: default;">
+                {{ usuario.nombre }}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>Correo Electrónico</label>
+            <div class="form-control" style="background: rgba(255,255,255,0.02); cursor: default;">
+                {{ usuario.email }}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>Teléfono</label>
+            <div class="form-control" style="background: rgba(255,255,255,0.02); cursor: default;">
+                {{ usuario.telefono or 'No especificado' }}
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>Fecha de Registro</label>
+            <div class="form-control" style="background: rgba(255,255,255,0.02); cursor: default;">
+                {{ usuario.fecha_creacion.strftime('%d de %B de %Y a las %H:%M') }}
+            </div>
+        </div>
+        
+        <div class="actions">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">📋 Volver a Lista</a>
+            <a href="{{ url_for('editar', id=usuario.id) }}" class="btn btn-primary">✏️ Editar Usuario</a>
+            <a href="{{ url_for('eliminar', id=usuario.id) }}" 
+               class="btn btn-danger"
+               onclick="return confirm('¿Estás seguro de que deseas eliminar a {{ usuario.nombre }}?')">
+               🗑️ Eliminar Usuario
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
