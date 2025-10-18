@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Reserva #{{ reserva.id }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>¡Reserva Confirmada!</h1>
+    <p class="muted">Reserva #{{ reserva.id }}</p>
+    
+    {% if reserva.estado == 'confirmada' %}
+    <div class="flash success" style="margin-top: 16px;">
+        Tu reserva ha sido confirmada exitosamente. Recibirás un email de confirmación en {{ reserva.email_huesped }}
+    </div>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Detalles de la Reserva</h2>
+    
+    <div class="detail-grid">
+        <div class="detail-item">
+            <div class="detail-label">Habitación</div>
+            <div class="detail-value">{{ reserva.habitacion.numero }} - {{ reserva.habitacion.tipo }}</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">Huésped</div>
+            <div class="detail-value">{{ reserva.nombre_huesped }}</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">Email</div>
+            <div class="detail-value">{{ reserva.email_huesped }}</div>
+        </div>
+        
+        {% if reserva.telefono %}
+        <div class="detail-item">
+            <div class="detail-label">Teléfono</div>
+            <div class="detail-value">{{ reserva.telefono }}</div>
+        </div>
+        {% endif %}
+        
+        <div class="detail-item">
+            <div class="detail-label">Check-in</div>
+            <div class="detail-value">{{ reserva.check_in.strftime('%d/%m/%Y') }}</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">Check-out</div>
+            <div class="detail-value">{{ reserva.check_out.strftime('%d/%m/%Y') }}</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">Noches</div>
+            <div class="detail-value">{{ noches }}</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">Huéspedes</div>
+            <div class="detail-value">{{ reserva.num_huespedes }}</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">Total</div>
+            <div class="detail-value" style="font-size: 24px;">${{ "%.2f"|format(reserva.total) }}</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">Estado</div>
+            <div class="detail-value">
+                {% if reserva.estado == 'confirmada' %}
+                    <span class="badge badge-success">Confirmada</span>
+                {% else %}
+                    <span class="badge badge-error">Cancelada</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="btn-group">
+        <a href="{{ url_for('index') }}" class="btn btn-ghost">Ver habitaciones</a>
+        <a href="{{ url_for('mis_reservas') }}" class="btn btn-ghost">Mis reservas</a>
+        {% if reserva.estado == 'confirmada' %}
+        <a href="{{ url_for('cancelar_reserva', id=reserva.id) }}" 
+           class="btn btn-danger"
+           onclick="return confirm('¿Estás seguro de cancelar esta reserva?')">
+            Cancelar Reserva
+        </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

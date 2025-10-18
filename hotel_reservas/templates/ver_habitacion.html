@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Habitación {{ habitacion.numero }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Habitación {{ habitacion.numero }}</h1>
+    <div class="room-type" style="font-size: 18px; margin-bottom: 20px;">{{ habitacion.tipo }}</div>
+    
+    <div class="detail-grid">
+        <div class="detail-item">
+            <div class="detail-label">Capacidad</div>
+            <div class="detail-value">{{ habitacion.capacidad }} {{ 'persona' if habitacion.capacidad == 1 else 'personas' }}</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">Precio por noche</div>
+            <div class="detail-value">${{ "%.2f"|format(habitacion.precio_noche) }}</div>
+        </div>
+        
+        <div class="detail-item">
+            <div class="detail-label">Estado</div>
+            <div class="detail-value">
+                {% if habitacion.disponible %}
+                    <span class="badge badge-success">Disponible</span>
+                {% else %}
+                    <span class="badge badge-error">No disponible</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    {% if habitacion.descripcion %}
+    <div style="margin: 20px 0;">
+        <h2>Descripción</h2>
+        <p class="muted">{{ habitacion.descripcion }}</p>
+    </div>
+    {% endif %}
+    
+    <div class="btn-group">
+        <a href="{{ url_for('index') }}" class="btn btn-ghost">Volver</a>
+        {% if habitacion.disponible %}
+        <a href="{{ url_for('crear_reserva', habitacion_id=habitacion.id) }}" class="btn btn-primary">Reservar ahora</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

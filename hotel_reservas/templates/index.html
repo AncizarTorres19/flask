@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Habitaciones Disponibles{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Habitaciones Disponibles</h1>
+    <p class="muted">Selecciona una habitación para reservar</p>
+</div>
+
+<div class="card-grid">
+    {% for hab in habitaciones %}
+    <div class="room-card">
+        <div class="room-number">Habitación {{ hab.numero }}</div>
+        <div class="room-type">{{ hab.tipo }}</div>
+        
+        <p class="muted" style="margin: 12px 0; min-height: 60px;">
+            {{ hab.descripcion or 'Habitación cómoda y acogedora' }}
+        </p>
+        
+        <div class="room-info">
+            <span>👥 {{ hab.capacidad }} {{ 'persona' if hab.capacidad == 1 else 'personas' }}</span>
+        </div>
+        
+        <div class="price">${{ "%.2f"|format(hab.precio_noche) }} / noche</div>
+        
+        <div class="btn-group">
+            <a href="{{ url_for('ver_habitacion', id=hab.id) }}" class="btn btn-ghost">Ver detalles</a>
+            <a href="{{ url_for('crear_reserva', habitacion_id=hab.id) }}" class="btn btn-primary">Reservar</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% if not habitaciones %}
+<div class="card">
+    <p class="muted">No hay habitaciones disponibles en este momento.</p>
+</div>
+{% endif %}
+{% endblock %}

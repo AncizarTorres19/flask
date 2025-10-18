@@ -83,10 +83,23 @@ def confirmar_reserva():
     conn = conectar_bd()
     cursor = conn.cursor()
 
+    # Insertar cliente
     cursor.execute("""
-        INSERT INTO reservas (habitacion_id, entrada, salida, huespedes, nombre, cedula, telefono)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
-    """, (habitacion_id, entrada, salida, huespedes, nombre, cedula, telefono))
+        INSERT INTO clientes (nombre, cedula, telefono)
+        VALUES (%s, %s, %s)
+    """, (nombre, cedula, telefono))
+    cliente_id = cursor.lastrowid
+
+    # Insertar reserva
+    cursor.execute("""
+        INSERT INTO reservas (habitacion_id, entrada, salida, huespedes, cliente_id)
+        VALUES (%s, %s, %s, %s, %s)
+    """, (habitacion_id, entrada, salida, huespedes, cliente_id))
+    
+    # Marcar habitación como no disponible
+    cursor.execute("""
+        UPDATE habitaciones SET disponible = FALSE WHERE id = %s
+    """, (habitacion_id,))
 
     conn.commit()
     conn.close()

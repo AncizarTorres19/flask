@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel de Administración{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Panel de Administración</h1>
+    <p class="muted">Gestión de habitaciones y reservas</p>
+</div>
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2>Habitaciones</h2>
+        <a href="{{ url_for('nueva_habitacion') }}" class="btn btn-primary">+ Nueva Habitación</a>
+    </div>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Tipo</th>
+                <th>Capacidad</th>
+                <th>Precio/noche</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for hab in habitaciones %}
+            <tr>
+                <td><strong>{{ hab.numero }}</strong></td>
+                <td>{{ hab.tipo }}</td>
+                <td>{{ hab.capacidad }} {{ 'persona' if hab.capacidad == 1 else 'personas' }}</td>
+                <td>${{ "%.2f"|format(hab.precio_noche) }}</td>
+                <td>
+                    {% if hab.disponible %}
+                        <span class="badge badge-success">Disponible</span>
+                    {% else %}
+                        <span class="badge badge-error">No disponible</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('editar_habitacion', id=hab.id) }}" class="btn btn-ghost" style="padding: 6px 12px; font-size: 12px;">Editar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h2>Últimas Reservas</h2>
+    
+    {% if reservas %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Habitación</th>
+                <th>Huésped</th>
+                <th>Fechas</th>
+                <th>Total</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for res in reservas %}
+            <tr>
+                <td>{{ res.id }}</td>
+                <td>{{ res.habitacion.numero }}</td>
+                <td>{{ res.nombre_huesped }}</td>
+                <td>{{ res.check_in.strftime('%d/%m') }} - {{ res.check_out.strftime('%d/%m') }}</td>
+                <td>${{ "%.2f"|format(res.total) }}</td>
+                <td>
+                    {% if res.estado == 'confirmada' %}
+                        <span class="badge badge-success">Confirmada</span>
+                    {% else %}
+                        <span class="badge badge-error">Cancelada</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="muted">No hay reservas todavía.</p>
+    {% endif %}
+</div>
+{% endblock %}

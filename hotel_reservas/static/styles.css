@@ -1,0 +1,339 @@
+/* Estilos minimalistas - Patrón visual de actividad_19_09_2025 */
+:root{
+    --bg-1: #0f1724;
+    --card: #0b1320;
+    --accent: #6ee7b7;
+    --accent-hover: #4fd1c5;
+    --muted: #94a3b8;
+    --glass: rgba(255,255,255,0.04);
+    --error: #ef4444;
+    --success: #10b981;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Inter, 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(180deg, #071129 0%, #0b1220 100%);
+    color: #e6eef8;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+}
+
+.site {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+/* Header / Navegación */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    margin-bottom: 24px;
+}
+
+.brand {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 20px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 12px;
+}
+
+/* Cards */
+.card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius: 14px;
+    padding: 28px;
+    box-shadow: 0 6px 30px rgba(2,6,23,0.6);
+    margin-bottom: 20px;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.room-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(2,6,23,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.room-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(110,231,183,0.1);
+}
+
+.room-number {
+    color: var(--accent);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.room-type {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.room-info {
+    display: flex;
+    gap: 16px;
+    margin: 12px 0;
+    font-size: 14px;
+}
+
+.room-info span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.price {
+    color: var(--accent);
+    font-size: 20px;
+    font-weight: 600;
+    margin: 12px 0;
+}
+
+h1 {
+    color: var(--accent);
+    margin-bottom: 16px;
+    font-size: 28px;
+}
+
+h2 {
+    color: var(--accent);
+    margin-bottom: 12px;
+    font-size: 22px;
+}
+
+.muted {
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+/* Botones */
+.btn {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+    color: #052024;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btn-ghost {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--muted);
+}
+
+.btn-ghost:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.btn-danger {
+    background: var(--error);
+    color: white;
+}
+
+.btn-danger:hover {
+    opacity: 0.9;
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+/* Formularios */
+.form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+}
+
+.field label {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.field input,
+.field select,
+.field textarea {
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: var(--glass);
+    color: inherit;
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+    color: rgba(230,238,248,0.5);
+}
+
+/* Mensajes flash */
+.flash-messages {
+    margin-bottom: 20px;
+}
+
+.flash {
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.flash.success {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid var(--success);
+    color: var(--success);
+}
+
+.flash.error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid var(--error);
+    color: var(--error);
+}
+
+/* Tablas */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+}
+
+.table th {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.table td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.table tr:hover {
+    background: rgba(255,255,255,0.02);
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-success {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--success);
+}
+
+.badge-error {
+    background: rgba(239, 68, 68, 0.2);
+    color: var(--error);
+}
+
+/* Detalles de reserva */
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+}
+
+.detail-item {
+    background: rgba(255,255,255,0.02);
+    padding: 16px;
+    border-radius: 10px;
+}
+
+.detail-label {
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.detail-value {
+    color: var(--accent);
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.footer {
+    margin-top: 40px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+    padding: 20px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .nav {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+}

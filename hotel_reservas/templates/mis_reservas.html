@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Reservas{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Mis Reservas</h1>
+    <p class="muted">Historial de todas las reservas</p>
+</div>
+
+<div class="card">
+    {% if reservas %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Habitación</th>
+                <th>Huésped</th>
+                <th>Check-in</th>
+                <th>Check-out</th>
+                <th>Total</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reserva in reservas %}
+            <tr>
+                <td>{{ reserva.id }}</td>
+                <td>{{ reserva.habitacion.numero }} - {{ reserva.habitacion.tipo }}</td>
+                <td>{{ reserva.nombre_huesped }}</td>
+                <td>{{ reserva.check_in.strftime('%d/%m/%Y') }}</td>
+                <td>{{ reserva.check_out.strftime('%d/%m/%Y') }}</td>
+                <td>${{ "%.2f"|format(reserva.total) }}</td>
+                <td>
+                    {% if reserva.estado == 'confirmada' %}
+                        <span class="badge badge-success">Confirmada</span>
+                    {% else %}
+                        <span class="badge badge-error">Cancelada</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('ver_reserva', id=reserva.id) }}" class="btn btn-ghost" style="padding: 6px 12px; font-size: 12px;">Ver</a>
+                    {% if reserva.estado == 'confirmada' %}
+                    <a href="{{ url_for('cancelar_reserva', id=reserva.id) }}" 
+                       class="btn btn-danger" 
+                       style="padding: 6px 12px; font-size: 12px;"
+                       onclick="return confirm('¿Cancelar esta reserva?')">
+                        Cancelar
+                    </a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="muted">No tienes reservas todavía.</p>
+    <a href="{{ url_for('index') }}" class="btn btn-primary" style="margin-top: 16px;">Ver habitaciones</a>
+    {% endif %}
+</div>
+{% endblock %}

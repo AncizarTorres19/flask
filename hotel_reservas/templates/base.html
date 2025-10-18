@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Hotel Reservas{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="site">
+        <header class="nav">
+            <div class="brand">🏨 Hotel Reservas</div>
+            <nav class="nav-links">
+                <a class="btn btn-ghost" href="{{ url_for('index') }}">Habitaciones</a>
+                <a class="btn btn-ghost" href="{{ url_for('mis_reservas') }}">Mis Reservas</a>
+                <a class="btn btn-ghost" href="{{ url_for('admin') }}">Admin</a>
+            </nav>
+        </header>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-messages">
+              {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="footer">
+            Sistema de Reservas • Hotel • 2025
+        </footer>
+    </div>
+</body>
+</html>
