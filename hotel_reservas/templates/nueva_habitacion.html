@@ -9,7 +9,7 @@
 </div>
 
 <div class="card">
-    <form class="form" method="POST">
+    <form class="form" method="POST" enctype="multipart/form-data">
         <div class="field">
             <label for="numero">Número de habitación *</label>
             <input type="text" id="numero" name="numero" required placeholder="101">
@@ -41,10 +41,33 @@
             <textarea id="descripcion" name="descripcion" rows="3" placeholder="Descripción de la habitación..."></textarea>
         </div>
         
+        <div class="field">
+            <label for="imagen">Imagen de la habitación</label>
+            <input type="file" id="imagen" name="imagen" accept="image/*" onchange="previewImage(event)">
+            <small class="muted">Formatos permitidos: JPG, PNG, GIF, WEBP (Max 16MB)</small>
+            <div id="imagePreview" style="margin-top: 12px; display: none;">
+                <img id="preview" src="" alt="Preview" style="max-width: 300px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+            </div>
+        </div>
+        
         <div class="btn-group">
             <a href="{{ url_for('admin') }}" class="btn btn-ghost">Cancelar</a>
             <button type="submit" class="btn btn-primary">Crear Habitación</button>
         </div>
     </form>
 </div>
+
+<script>
+function previewImage(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('preview').src = e.target.result;
+            document.getElementById('imagePreview').style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+    }
+}
+</script>
 {% endblock %}

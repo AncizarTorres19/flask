@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Iniciar Sesión{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1>Bienvenido</h1>
+            <p class="muted">Inicia sesión para continuar</p>
+        </div>
+        
+        <form class="form" method="POST">
+            <div class="field">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required placeholder="tu@email.com" autofocus>
+            </div>
+            
+            <div class="field">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" required placeholder="••••••••">
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
+        </form>
+        
+        <div class="auth-footer">
+            <p class="muted">¿No tienes cuenta? <a href="{{ url_for('registro') }}">Regístrate aquí</a></p>
+        </div>
+        
+        <div class="demo-users">
+            <p class="muted" style="margin-bottom: 8px; font-size: 13px;">👤 Usuarios de prueba:</p>
+            <div class="demo-item">
+                <strong>Admin:</strong> admin@hotel.com / admin123
+            </div>
+            <div class="demo-item">
+                <strong>User:</strong> user@hotel.com / user123
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

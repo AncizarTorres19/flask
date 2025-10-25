@@ -1,0 +1,75 @@
+<!-- Chatbot Widget -->
+<div class="chat-widget">
+    <!-- Botón flotante -->
+    <button class="chat-button" onclick="toggleChat()" id="chatButton">
+        <svg class="chat-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        <span class="chat-badge" id="chatBadge">1</span>
+    </button>
+    
+    <!-- Ventana de chat -->
+    <div class="chat-window" id="chatWindow">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <div class="chat-avatar">🤖</div>
+                <div>
+                    <div class="chat-title">Asistente Virtual</div>
+                    <div class="chat-status">En línea</div>
+                </div>
+            </div>
+            <button class="chat-close" onclick="toggleChat()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Mensajes -->
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-message bot">
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <p>¡Hola! 👋 Soy tu asistente virtual.</p>
+                    <p>¿En qué puedo ayudarte hoy?</p>
+                </div>
+            </div>
+            
+            <div class="chat-suggestions">
+                <button class="suggestion-btn" onclick="enviarMensajeRapido('¿Qué habitaciones tienen disponibles?')">
+                    🏨 Ver habitaciones
+                </button>
+                <button class="suggestion-btn" onclick="enviarMensajeRapido('¿Cuáles son los precios?')">
+                    💰 Precios
+                </button>
+                <button class="suggestion-btn" onclick="enviarMensajeRapido('¿Cómo hago una reserva?')">
+                    📅 Hacer reserva
+                </button>
+                <button class="suggestion-btn" onclick="enviarMensajeRapido('Ayuda')">
+                    ❓ Ayuda
+                </button>
+            </div>
+        </div>
+        
+        <!-- Input -->
+        <div class="chat-input-container">
+            <input 
+                type="text" 
+                class="chat-input" 
+                id="chatInput" 
+                placeholder="Escribe tu mensaje..."
+                onkeypress="if(event.key === 'Enter') enviarMensaje()"
+            >
+            <button class="chat-send" onclick="enviarMensaje()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='chat.js') }}"></script>

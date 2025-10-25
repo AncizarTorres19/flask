@@ -4,6 +4,13 @@
 
 {% block content %}
 <div class="card">
+    {% if habitacion.imagen and habitacion.imagen != 'default.jpg' %}
+    <div class="room-detail-image">
+        <img src="{{ url_for('static', filename='uploads/habitaciones/' + habitacion.imagen) }}" 
+             alt="Habitación {{ habitacion.numero }}">
+    </div>
+    {% endif %}
+    
     <h1>Habitación {{ habitacion.numero }}</h1>
     <div class="room-type" style="font-size: 18px; margin-bottom: 20px;">{{ habitacion.tipo }}</div>
     

@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
+from functools import wraps
 from datetime import datetime, timedelta
 import os
 
@@ -8,9 +11,40 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'hotel-reservas-secret-key')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'mysql+pymysql://root:1234@localhost:3306/hotel_reservas')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# Configuración de uploads
+UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'uploads', 'habitaciones')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max
+
+# Crear carpeta de uploads si no existe
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
 db = SQLAlchemy(app)
 
 # ========== MODELOS ==========
+
+class Usuario(db.Model):
+    __tablename__ = 'usuarios'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
+    nombre = db.Column(db.String(100), nullable=False)
+    rol = db.Column(db.String(20), default='user')  # admin, user
+    fecha_registro = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relación con reservas
+    reservas = db.relationship('Reserva', backref='usuario', lazy=True)
+    
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+    
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+    
+    def __repr__(self):
+        return f'<Usuario {self.email} - {self.rol}>'
 
 class Habitacion(db.Model):
     __tablename__ = 'habitaciones'
@@ -21,6 +55,7 @@ class Habitacion(db.Model):
     capacidad = db.Column(db.Integer, nullable=False)
     precio_noche = db.Column(db.Float, nullable=False)
     descripcion = db.Column(db.Text)
+    imagen = db.Column(db.String(255), default='default.jpg')  # Nombre del archivo de imagen
     disponible = db.Column(db.Boolean, default=True)
     
     # Relación con reservas
@@ -34,6 +69,7 @@ class Reserva(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     habitacion_id = db.Column(db.Integer, db.ForeignKey('habitaciones.id'), nullable=False)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
     nombre_huesped = db.Column(db.String(100), nullable=False)
     email_huesped = db.Column(db.String(120), nullable=False)
     telefono = db.Column(db.String(20))
@@ -48,6 +84,36 @@ class Reserva(db.Model):
         return f'<Reserva #{self.id} - Habitación {self.habitacion_id}>'
 
 # ========== FUNCIONES AUXILIARES ==========
+
+def allowed_file(filename):
+    """Verifica si el archivo tiene una extensión permitida."""
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def login_required(f):
+    """Decorador para requerir autenticación."""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'usuario_id' not in session:
+            flash('Debes iniciar sesión para acceder a esta página', 'error')
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+def admin_required(f):
+    """Decorador para requerir rol de administrador."""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'usuario_id' not in session:
+            flash('Debes iniciar sesión para acceder a esta página', 'error')
+            return redirect(url_for('login'))
+        
+        usuario = Usuario.query.get(session['usuario_id'])
+        if not usuario or usuario.rol != 'admin':
+            flash('No tienes permisos para acceder a esta página', 'error')
+            return redirect(url_for('index'))
+        
+        return f(*args, **kwargs)
+    return decorated_function
 
 def verificar_disponibilidad(habitacion_id, check_in, check_out, reserva_id=None):
     """Verifica si una habitación está disponible en las fechas dadas."""
@@ -72,6 +138,89 @@ def calcular_total(precio_noche, check_in, check_out):
 
 # ========== RUTAS ==========
 
+# --- Autenticación ---
+
+@app.route('/registro', methods=['GET', 'POST'])
+def registro():
+    """Registrar nuevo usuario."""
+    if 'usuario_id' in session:
+        return redirect(url_for('index'))
+    
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        email = request.form['email']
+        password = request.form['password']
+        confirmar = request.form['confirmar_password']
+        
+        # Validaciones
+        if not nombre or not email or not password:
+            flash('Todos los campos son obligatorios', 'error')
+            return redirect(url_for('registro'))
+        
+        if password != confirmar:
+            flash('Las contraseñas no coinciden', 'error')
+            return redirect(url_for('registro'))
+        
+        if len(password) < 6:
+            flash('La contraseña debe tener al menos 6 caracteres', 'error')
+            return redirect(url_for('registro'))
+        
+        # Verificar email duplicado
+        if Usuario.query.filter_by(email=email).first():
+            flash('Este email ya está registrado', 'error')
+            return redirect(url_for('registro'))
+        
+        # Crear usuario
+        nuevo_usuario = Usuario(
+            email=email,
+            nombre=nombre,
+            rol='user'
+        )
+        nuevo_usuario.set_password(password)
+        
+        try:
+            db.session.add(nuevo_usuario)
+            db.session.commit()
+            flash('¡Cuenta creada exitosamente! Ahora puedes iniciar sesión', 'success')
+            return redirect(url_for('login'))
+        except:
+            db.session.rollback()
+            flash('Error al crear la cuenta', 'error')
+    
+    return render_template('registro.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """Iniciar sesión."""
+    if 'usuario_id' in session:
+        return redirect(url_for('index'))
+    
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        
+        usuario = Usuario.query.filter_by(email=email).first()
+        
+        if usuario and usuario.check_password(password):
+            session['usuario_id'] = usuario.id
+            session['usuario_nombre'] = usuario.nombre
+            session['usuario_rol'] = usuario.rol
+            flash(f'¡Bienvenido, {usuario.nombre}!', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash('Email o contraseña incorrectos', 'error')
+    
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    """Cerrar sesión."""
+    session.clear()
+    flash('Sesión cerrada exitosamente', 'success')
+    return redirect(url_for('index'))
+
+# --- Habitaciones y Reservas ---
+
 @app.route('/')
 def index():
     """Página principal - muestra habitaciones disponibles."""
@@ -85,6 +234,7 @@ def ver_habitacion(id):
     return render_template('ver_habitacion.html', habitacion=habitacion)
 
 @app.route('/reservar/<int:habitacion_id>', methods=['GET', 'POST'])
+@login_required
 def crear_reserva(habitacion_id):
     """Crear una nueva reserva."""
     habitacion = Habitacion.query.get_or_404(habitacion_id)
@@ -129,6 +279,7 @@ def crear_reserva(habitacion_id):
         # Crear reserva
         nueva_reserva = Reserva(
             habitacion_id=habitacion_id,
+            usuario_id=session['usuario_id'],
             nombre_huesped=nombre,
             email_huesped=email,
             telefono=telefono,
@@ -152,6 +303,7 @@ def crear_reserva(habitacion_id):
     return render_template('crear_reserva.html', habitacion=habitacion)
 
 @app.route('/reserva/<int:id>')
+@login_required
 def ver_reserva(id):
     """Ver detalles de una reserva."""
     reserva = Reserva.query.get_or_404(id)
@@ -159,12 +311,14 @@ def ver_reserva(id):
     return render_template('ver_reserva.html', reserva=reserva, noches=noches)
 
 @app.route('/mis-reservas')
+@login_required
 def mis_reservas():
-    """Listar todas las reservas."""
-    reservas = Reserva.query.order_by(Reserva.fecha_creacion.desc()).all()
+    """Listar reservas del usuario actual."""
+    reservas = Reserva.query.filter_by(usuario_id=session['usuario_id']).order_by(Reserva.fecha_creacion.desc()).all()
     return render_template('mis_reservas.html', reservas=reservas)
 
 @app.route('/cancelar-reserva/<int:id>')
+@login_required
 def cancelar_reserva(id):
     """Cancelar una reserva."""
     reserva = Reserva.query.get_or_404(id)
@@ -187,6 +341,7 @@ def cancelar_reserva(id):
 # ========== ADMIN (Gestión de habitaciones) ==========
 
 @app.route('/admin')
+@admin_required
 def admin():
     """Panel de administración."""
     habitaciones = Habitacion.query.all()
@@ -194,6 +349,7 @@ def admin():
     return render_template('admin.html', habitaciones=habitaciones, reservas=reservas)
 
 @app.route('/admin/habitacion/nueva', methods=['GET', 'POST'])
+@admin_required
 def nueva_habitacion():
     """Crear nueva habitación."""
     if request.method == 'POST':
@@ -208,12 +364,25 @@ def nueva_habitacion():
             flash('Ya existe una habitación con ese número', 'error')
             return redirect(url_for('nueva_habitacion'))
         
+        # Procesar imagen
+        imagen_nombre = 'default.jpg'
+        if 'imagen' in request.files:
+            file = request.files['imagen']
+            if file and file.filename != '' and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                # Agregar timestamp para evitar duplicados
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                imagen_nombre = f"{timestamp}_{filename}"
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], imagen_nombre)
+                file.save(filepath)
+        
         nueva = Habitacion(
             numero=numero,
             tipo=tipo,
             capacidad=capacidad,
             precio_noche=precio,
-            descripcion=descripcion
+            descripcion=descripcion,
+            imagen=imagen_nombre
         )
         
         try:
@@ -228,6 +397,7 @@ def nueva_habitacion():
     return render_template('nueva_habitacion.html')
 
 @app.route('/admin/habitacion/editar/<int:id>', methods=['GET', 'POST'])
+@admin_required
 def editar_habitacion(id):
     """Editar habitación existente."""
     habitacion = Habitacion.query.get_or_404(id)
@@ -239,6 +409,24 @@ def editar_habitacion(id):
         habitacion.precio_noche = float(request.form['precio'])
         habitacion.descripcion = request.form.get('descripcion', '')
         habitacion.disponible = 'disponible' in request.form
+        
+        # Procesar nueva imagen si se subió
+        if 'imagen' in request.files:
+            file = request.files['imagen']
+            if file and file.filename != '' and allowed_file(file.filename):
+                # Eliminar imagen anterior si no es la default
+                if habitacion.imagen and habitacion.imagen != 'default.jpg':
+                    old_image_path = os.path.join(app.config['UPLOAD_FOLDER'], habitacion.imagen)
+                    if os.path.exists(old_image_path):
+                        os.remove(old_image_path)
+                
+                # Guardar nueva imagen
+                filename = secure_filename(file.filename)
+                timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+                imagen_nombre = f"{timestamp}_{filename}"
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], imagen_nombre)
+                file.save(filepath)
+                habitacion.imagen = imagen_nombre
         
         try:
             db.session.commit()
@@ -254,6 +442,28 @@ def editar_habitacion(id):
 
 with app.app_context():
     db.create_all()
+    
+    # Crear usuarios de ejemplo si no existen
+    if Usuario.query.count() == 0:
+        admin = Usuario(
+            email='admin@hotel.com',
+            nombre='Administrador',
+            rol='admin'
+        )
+        admin.set_password('admin123')
+        
+        user = Usuario(
+            email='user@hotel.com',
+            nombre='Usuario Test',
+            rol='user'
+        )
+        user.set_password('user123')
+        
+        db.session.add_all([admin, user])
+        db.session.commit()
+        print('✅ Usuarios de ejemplo creados:')
+        print('   Admin: admin@hotel.com / admin123')
+        print('   User: user@hotel.com / user123')
     
     # Crear habitaciones de ejemplo si no existen
     if Habitacion.query.count() == 0:

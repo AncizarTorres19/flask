@@ -9,7 +9,7 @@
 </div>
 
 <div class="card">
-    <form class="form" method="POST">
+    <form class="form" method="POST" enctype="multipart/form-data">
         <div class="field">
             <label for="numero">Número de habitación *</label>
             <input type="text" id="numero" name="numero" required value="{{ habitacion.numero }}">
@@ -41,6 +41,26 @@
         </div>
         
         <div class="field">
+            <label>Imagen actual</label>
+            {% if habitacion.imagen and habitacion.imagen != 'default.jpg' %}
+                <img src="{{ url_for('static', filename='uploads/habitaciones/' + habitacion.imagen) }}" 
+                     alt="{{ habitacion.numero }}" 
+                     style="max-width: 300px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 12px;">
+            {% else %}
+                <p class="muted">No hay imagen</p>
+            {% endif %}
+        </div>
+        
+        <div class="field">
+            <label for="imagen">Cambiar imagen</label>
+            <input type="file" id="imagen" name="imagen" accept="image/*" onchange="previewImage(event)">
+            <small class="muted">Formatos permitidos: JPG, PNG, GIF, WEBP (Max 16MB)</small>
+            <div id="imagePreview" style="margin-top: 12px; display: none;">
+                <img id="preview" src="" alt="Preview" style="max-width: 300px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+            </div>
+        </div>
+        
+        <div class="field">
             <label>
                 <input type="checkbox" name="disponible" {% if habitacion.disponible %}checked{% endif %}>
                 Habitación disponible
@@ -53,4 +73,18 @@
         </div>
     </form>
 </div>
+
+<script>
+function previewImage(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('preview').src = e.target.result;
+            document.getElementById('imagePreview').style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+    }
+}
+</script>
 {% endblock %}

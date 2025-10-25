@@ -11,6 +11,20 @@
 <div class="card-grid">
     {% for hab in habitaciones %}
     <div class="room-card">
+        <div class="room-image">
+            {% if hab.imagen and hab.imagen != 'default.jpg' %}
+                <img src="{{ url_for('static', filename='uploads/habitaciones/' + hab.imagen) }}" 
+                     alt="Habitación {{ hab.numero }}">
+            {% else %}
+                <div class="room-placeholder">
+                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </div>
+            {% endif %}
+        </div>
+        
         <div class="room-number">Habitación {{ hab.numero }}</div>
         <div class="room-type">{{ hab.tipo }}</div>
         

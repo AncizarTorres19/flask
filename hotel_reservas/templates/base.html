@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Hotel Reservas{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
 </head>
 <body>
     <div class="site">
@@ -12,8 +14,20 @@
             <div class="brand">🏨 Hotel Reservas</div>
             <nav class="nav-links">
                 <a class="btn btn-ghost" href="{{ url_for('index') }}">Habitaciones</a>
-                <a class="btn btn-ghost" href="{{ url_for('mis_reservas') }}">Mis Reservas</a>
-                <a class="btn btn-ghost" href="{{ url_for('admin') }}">Admin</a>
+                
+                {% if session.get('usuario_id') %}
+                    <a class="btn btn-ghost" href="{{ url_for('mis_reservas') }}">Mis Reservas</a>
+                    
+                    {% if session.get('usuario_rol') == 'admin' %}
+                        <a class="btn btn-ghost" href="{{ url_for('admin') }}">Admin</a>
+                    {% endif %}
+                    
+                    <span class="user-info">👤 {{ session.get('usuario_nombre') }}</span>
+                    <a class="btn btn-ghost" href="{{ url_for('logout') }}">Salir</a>
+                {% else %}
+                    <a class="btn btn-ghost" href="{{ url_for('login') }}">Iniciar Sesión</a>
+                    <a class="btn btn-primary" href="{{ url_for('registro') }}">Registrarse</a>
+                {% endif %}
             </nav>
         </header>
 
@@ -34,6 +48,9 @@
         <footer class="footer">
             Sistema de Reservas • Hotel • 2025
         </footer>
+        
+        <!-- Chatbot -->
+        {% include 'chatbot.html' %}
     </div>
 </body>
 </html>
