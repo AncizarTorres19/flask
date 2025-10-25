@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GHL Hoteles - Reservas de Habitaciones</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+      color: white;
+      padding: 1rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+      opacity: 0.15;
+      z-index: 0;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #06b6d4;
+    }
+
+    .logo span {
+      color: white;
+    }
+
+    .menu {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
+
+    .menu li a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .menu li a:hover {
+      background-color: rgba(6, 182, 212, 0.2);
+      transform: translateY(-2px);
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(rgba(30, 58, 138, 0.85), rgba(30, 64, 175, 0.85)), 
+                  url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+      color: white;
+      text-align: center;
+      padding: 4rem 2rem;
+      position: relative;
+    }
+
+    .hero-content h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-content p {
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+      opacity: 0.95;
+    }
+
+    /* Search Section */
+    .search-section {
+      background: white;
+      padding: 3rem 2rem;
+      box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 3;
+      margin-top: -2rem;
+      border-radius: 15px 15px 0 0;
+    }
+
+    .search-container {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .search-title {
+      font-size: 2rem;
+      color: #1e3a8a;
+      margin-bottom: 2rem;
+      font-weight: bold;
+    }
+
+    .search-form {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      border: 1px solid #bae6fd;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      min-width: 200px;
+    }
+
+    .form-group label {
+      font-weight: bold;
+      color: #1e3a8a;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group input {
+      padding: 1rem;
+      border: 2px solid #06b6d4;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #0891b2;
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .search-btn {
+      background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      align-self: flex-end;
+      min-width: 150px;
+      box-shadow: 0 4px 10px rgba(6, 182, 212, 0.3);
+    }
+
+    .search-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(6, 182, 212, 0.4);
+      background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+    }
+
+    /* Hotels Section */
+    .hotels-section {
+      padding: 4rem 2rem;
+      background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+    }
+
+    .hotels-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      color: #1e3a8a;
+      margin-bottom: 3rem;
+      position: relative;
+      font-weight: bold;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+      border-radius: 2px;
+    }
+
+    .hotels-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+
+    .hotel-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(30, 58, 138, 0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      border: 2px solid transparent;
+    }
+
+    .hotel-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(30, 58, 138, 0.2);
+      border-color: #06b6d4;
+    }
+
+    .hotel-image {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      transition: all 0.3s ease;
+    }
+
+    .hotel-card:hover .hotel-image {
+      transform: scale(1.05);
+    }
+
+    .hotel-info {
+      padding: 2rem;
+    }
+
+    .hotel-name {
+      font-size: 1.5rem;
+      color: #1e3a8a;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    .hotel-location {
+      color: #64748b;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+    }
+
+    .hotel-features {
+      list-style: none;
+      margin-bottom: 1.5rem;
+    }
+
+    .hotel-features li {
+      color: #475569;
+      margin-bottom: 0.5rem;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    .hotel-features li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #06b6d4;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .hotel-pricing {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .price-before {
+      text-decoration: line-through;
+      color: #94a3b8;
+      font-size: 0.9rem;
+    }
+
+    .price-current {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #1e3a8a;
+    }
+
+    .discount-badge {
+      background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+      color: white;
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      box-shadow: 0 4px 10px rgba(6, 182, 212, 0.4);
+    }
+
+    .view-more-btn {
+      background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+      color: white;
+      text-decoration: none;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(6, 182, 212, 0.3);
+    }
+
+    .view-more-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(6, 182, 212, 0.4);
+      background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-content h1 {
+        font-size: 2.5rem;
+      }
+
+      .search-form {
+        flex-direction: column;
+      }
+
+      .form-group {
+        min-width: 100%;
+      }
+
+      .menu {
+        display: none;
+      }
+
+      .hotels-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Loading animation */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hotel-card {
+      animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .hotel-card:nth-child(2) { animation-delay: 0.1s; }
+    .hotel-card:nth-child(3) { animation-delay: 0.2s; }
+    .hotel-card:nth-child(4) { animation-delay: 0.3s; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <nav class="navbar">
+      <div class="logo">GHL<span> Hoteles</span></div>
+      <ul class="menu">
+        <li><a href="#">Inicio</a></li>
+        <li><a href="#">Promociones</a></li>
+        <li><a href="#">Hoteles</a></li>
+        <li><a href="#">Todo Incluido</a></li>
+        <li><a href="#">Eventos</a></li>
+        <li><a href="#">Sostenibilidad</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Vive la Experiencia GHL</h1>
+      <p>Descubre nuestras habitaciones de lujo en los mejores destinos</p>
+    </div>
+  </section>
+
+  <!-- Search Section -->
+  <section class="search-section">
+    <div class="search-container">
+      <h2 class="search-title">Encuentra tu Habitación Ideal</h2>
+      <form action="{{ url_for('buscar') }}" method="get" class="search-form">
+        <div class="form-group">
+          <label for="entrada">Fecha de Entrada</label>
+          <input type="date" id="entrada" name="entrada" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="salida">Fecha de Salida</label>
+          <input type="date" id="salida" name="salida" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="huespedes">Huéspedes</label>
+          <input type="number" id="huespedes" name="huespedes" min="1" max="10" value="2" required>
+        </div>
+        
+        <button type="submit" class="search-btn">🔍 Buscar</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Hotels Section -->
+  <section class="hotels-section">
+    <div class="hotels-container">
+      <h2 class="section-title">Nuestras Habitaciones Destacadas</h2>
+      
+      <div class="hotels-grid">
+        <!-- Hotel 1 -->
+        <div class="hotel-card">
+          <div class="discount-badge">Hasta 48% Off</div>
+          <img src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="San Luis Hotel" class="hotel-image">
+          <div class="hotel-info">
+            <h3 class="hotel-name">San Luis</h3>
+            <p class="hotel-location">Isla de San Andrés</p>
+            
+            <ul class="hotel-features">
+              <li>Cajilla de seguridad</li>
+              <li>Asistencia médica</li>
+              <li>Paga 1, disfruta 5</li>
+              <li>Todo incluido</li>
+            </ul>
+            
+            <div class="hotel-pricing">
+              <div>
+                <div class="price-before">Antes: $2.219.100</div>
+                <div class="price-current">$1.098.000</div>
+              </div>
+            </div>
+            
+            <a href="#" class="view-more-btn">Ver Más Detalles</a>
+          </div>
+        </div>
+
+        <!-- Hotel 2 -->
+        <div class="hotel-card">
+          <div class="discount-badge">Hasta 35% Off</div>
+          <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Cartagena Hotel" class="hotel-image">
+          <div class="hotel-info">
+            <h3 class="hotel-name">Cartagena Premium</h3>
+            <p class="hotel-location">Cartagena de Indias</p>
+            
+            <ul class="hotel-features">
+              <li>Vista al mar Caribe</li>
+              <li>Spa y wellness center</li>
+              <li>5 restaurantes</li>
+              <li>Actividades acuáticas</li>
+            </ul>
+            
+            <div class="hotel-pricing">
+              <div>
+                <div class="price-before">Antes: $1.850.000</div>
+                <div class="price-current">$1.202.500</div>
+              </div>
+            </div>
+            
+            <a href="#" class="view-more-btn">Ver Más Detalles</a>
+          </div>
+        </div>
+
+        <!-- Hotel 3 -->
+        <div class="hotel-card">
+          <div class="discount-badge">Hasta 42% Off</div>
+          <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Barú Hotel" class="hotel-image">
+          <div class="hotel-info">
+            <h3 class="hotel-name">Barú Beach Resort</h3>
+            <p class="hotel-location">Isla Barú</p>
+            
+            <ul class="hotel-features">
+              <li>Playa privada</li>
+              <li>Deportes acuáticos</li>
+              <li>Kids club</li>
+              <li>Entretenimiento nocturno</li>
+            </ul>
+            
+            <div class="hotel-pricing">
+              <div>
+                <div class="price-before">Antes: $1.680.000</div>
+                <div class="price-current">$974.400</div>
+              </div>
+            </div>
+            
+            <a href="#" class="view-more-btn">Ver Más Detalles</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('entrada').setAttribute('min', today);
+    document.getElementById('salida').setAttribute('min', today);
+    
+    // Update checkout date when checkin changes
+    document.getElementById('entrada').addEventListener('change', function() {
+      const checkinDate = new Date(this.value);
+      checkinDate.setDate(checkinDate.getDate() + 1);
+      const minCheckout = checkinDate.toISOString().split('T')[0];
+      document.getElementById('salida').setAttribute('min', minCheckout);
+    });
+  </script>
+</body>
+</html>

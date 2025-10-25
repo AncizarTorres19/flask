@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva Confirmada - GHL Hoteles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .confirmation-card {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .success-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: bounce 1s ease;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        h1 {
+            color: #1e3a8a;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .confirmation-details {
+            background: #e0f2fe;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+        
+        .detail-item {
+            padding: 10px 0;
+            color: #1e3a8a;
+            font-size: 1.1rem;
+        }
+        
+        .btn-home {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        
+        .btn-home:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.4);
+        }
+        
+        .success-message {
+            color: #64748b;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="confirmation-card">
+        <div class="success-icon">✅</div>
+        <h1>¡Reserva Confirmada!</h1>
+        
+        <p class="success-message">
+            Tu reserva ha sido procesada exitosamente. 
+            Recibirás un correo electrónico con todos los detalles.
+        </p>
+        
+        <div class="confirmation-details">
+            <div class="detail-item">
+                <strong>📅 Fecha de Entrada:</strong> {{ entrada }}
+            </div>
+            <div class="detail-item">
+                <strong>📅 Fecha de Salida:</strong> {{ salida }}
+            </div>
+            <div class="detail-item">
+                <strong>🎉 Estado:</strong> Confirmada
+            </div>
+        </div>
+        
+        <p style="color: #64748b; font-size: 0.9rem; margin: 20px 0;">
+            💌 Te enviamos un correo con el código de confirmación<br>
+            📞 Para cualquier consulta, contáctanos al +57 300 123 4567
+        </p>
+        
+        <a href="{{ url_for('index') }}" class="btn-home">🏠 Volver al Inicio</a>
+    </div>
+</body>
+</html>

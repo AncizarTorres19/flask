@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservar Habitación - GHL Hoteles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(30, 58, 138, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #1e3a8a;
+            margin-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            color: #1e3a8a;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #06b6d4;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #0891b2;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+        }
+        
+        .btn-confirmar {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        .btn-confirmar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.4);
+        }
+        
+        .btn-volver {
+            background: #64748b;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        
+        .info-reserva {
+            background: #e0f2fe;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .info-item {
+            margin-bottom: 8px;
+            color: #1e3a8a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="javascript:history.back()" class="btn-volver">← Volver</a>
+        
+        <div class="card">
+            <h1>Confirmar Reserva</h1>
+            <p style="color: #64748b; margin-bottom: 20px;">Habitación: {{ habitacion.nombre }}</p>
+            
+            <div class="info-reserva">
+                <div class="info-item"><strong>📅 Entrada:</strong> {{ entrada }}</div>
+                <div class="info-item"><strong>📅 Salida:</strong> {{ salida }}</div>
+                <div class="info-item"><strong>👥 Huéspedes:</strong> {{ huespedes }}</div>
+            </div>
+            
+            <form method="POST" action="{{ url_for('confirmar_reserva') }}">
+                <input type="hidden" name="habitacion_id" value="{{ habitacion.id }}">
+                <input type="hidden" name="entrada" value="{{ entrada }}">
+                <input type="hidden" name="salida" value="{{ salida }}">
+                <input type="hidden" name="huespedes" value="{{ huespedes }}">
+                
+                <div class="form-group">
+                    <label for="nombre">Nombre Completo *</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cedula">Cédula / Documento *</label>
+                    <input type="text" id="cedula" name="cédula" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="telefono">Teléfono *</label>
+                    <input type="tel" id="telefono" name="telefono" required>
+                </div>
+                
+                <button type="submit" class="btn-confirmar">✓ Confirmar Reserva</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
