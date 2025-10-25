@@ -11,7 +11,10 @@ def conectar_bd():
         port=3307,  # Puerto de Docker
         user="root",
         password="root123",  # Nueva contraseña de Docker
-        database="hotel_reservas"
+        database="hotel_reservas",
+        charset='utf8mb4',
+        collation='utf8mb4_unicode_ci',
+        use_unicode=True
     )
 
 def login_required(f):
