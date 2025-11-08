@@ -4,9 +4,9 @@
 CREATE TABLE IF NOT EXISTS `clientes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(100) NOT NULL,
-  `correo` varchar(100) NOT NULL,
-  `cedula` int(10) NOT NULL,
-  `telefono` int(10) NOT NULL,
+  `correo` varchar(100) DEFAULT '',
+  `cedula` varchar(20) NOT NULL,
+  `telefono` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Panel de Administración — GHL Hoteles</title>
+        <!-- Bootstrap 5 CDN -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Proyecto: estilos generales -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+        <!-- Estilos específicos del admin -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    </head>
+    <body class="bg-light">
+        <header class="admin-topbar shadow-sm">
+            <div class="container-fluid d-flex align-items-center justify-content-between py-2">
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-outline-secondary d-md-none" id="toggleSidebar">☰</button>
+                    <a class="navbar-brand fw-bold text-primary" href="#">GHL Hoteles <span class="text-muted small">Admin</span></a>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="me-3 small text-muted">Bienvenido, <strong>{{ session.get('usuario') or 'Administrador' }}</strong></div>
+                    <a class="btn btn-sm btn-outline-danger" href="{{ url_for('logout') }}">Cerrar sesión</a>
+                </div>
+            </div>
+        </header>
+
+        <div class="admin-layout">
+            <aside class="admin-sidebar bg-white shadow-sm">
+                <nav class="p-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link active" href="#">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Habitaciones</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Reservas</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Clientes</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Ajustes</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <main class="admin-main p-4">
+                <div class="container-fluid">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="h4">Panel de Administración</h2>
+                        <small class="text-muted">Última actualización: {{ "now" | safe }}</small>
+                    </div>
+
+                    <!-- Stats cards -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-12 col-sm-6 col-md-3">
+                            <div class="card shadow-sm h-100 border-0">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <small class="text-muted">Total de Habitaciones</small>
+                                            <h3 class="mt-2 mb-0">{{ total_habitaciones | default(0) }}</h3>
+                                        </div>
+                                        <div class="stat-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center">
+                                            🏨
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-md-3">
+                            <div class="card shadow-sm h-100 border-0">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <small class="text-muted">Habitaciones Disponibles</small>
+                                            <h3 class="mt-2 mb-0">{{ habitaciones_disponibles | default(0) }}</h3>
+                                        </div>
+                                        <div class="stat-icon bg-success text-white rounded-circle d-flex align-items-center justify-content-center">
+                                            ✅
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-md-3">
+                            <div class="card shadow-sm h-100 border-0">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <small class="text-muted">Total de Reservas</small>
+                                            <h3 class="mt-2 mb-0">{{ total_reservas | default(0) }}</h3>
+                                        </div>
+                                        <div class="stat-icon bg-warning text-white rounded-circle d-flex align-items-center justify-content-center">
+                                            📅
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-md-3">
+                            <div class="card shadow-sm h-100 border-0">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <small class="text-muted">Acciones rápidas</small>
+                                            <div class="mt-2 d-flex gap-2">
+                                                <a class="btn btn-sm btn-primary" href="#">Nueva Habitación</a>
+                                                <a class="btn btn-sm btn-outline-primary" href="#">Ver Reservas</a>
+                                            </div>
+                                        </div>
+                                        <div class="stat-icon bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center">
+                                            ⚙️
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel central -->
+                    <div class="row g-4">
+                        <div class="col-12 col-lg-8">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title">Reservas recientes</h5>
+                                    <p class="text-muted small">Listado breve de las reservas más recientes (integración pendiente).</p>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead class="table-light small">
+                                                <tr>
+                                                    <th>Reserva</th>
+                                                    <th>Cliente</th>
+                                                    <th>Habitación</th>
+                                                    <th>Entrada</th>
+                                                    <th>Salida</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="5" class="text-center text-muted">No hay datos cargados aún.</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-4">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title">Actividad</h5>
+                                    <ul class="list-unstyled small">
+                                        <li>• Login admin reciente</li>
+                                        <li>• Reserva creada (simulación)</li>
+                                        <li>• Habitaciones actualizadas</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+
+        <!-- Bootstrap JS (opcional) -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Toggle sidebar en pantallas pequeñas
+            const btn = document.getElementById('toggleSidebar');
+            if (btn) btn.addEventListener('click', () => document.querySelector('.admin-sidebar').classList.toggle('open'));
+        </script>
+    </body>
+</html>

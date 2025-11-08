@@ -26,6 +26,84 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session or session.get('rol') != 'admin':
+            flash('Acceso restringido: debes iniciar sesión como administrador.', 'warning')
+            return redirect(url_for('admin_login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+@app.route('/admin')
+@admin_required
+def admin_dashboard():
+    # Consultas simples para mostrar estadísticas en el dashboard
+    try:
+        conn = conectar_bd()
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT COUNT(*) FROM habitaciones")
+        total_habitaciones = cursor.fetchone()[0] or 0
+
+        cursor.execute("SELECT COUNT(*) FROM habitaciones WHERE disponible = TRUE")
+        habitaciones_disponibles = cursor.fetchone()[0] or 0
+
+        cursor.execute("SELECT COUNT(*) FROM reservas")
+        total_reservas = cursor.fetchone()[0] or 0
+
+    except Exception as e:
+        # En caso de error con la base de datos, usar ceros y mostrar log en la consola
+        print('Error consultando estadísticas admin:', e)
+        total_habitaciones = 0
+        habitaciones_disponibles = 0
+        total_reservas = 0
+    finally:
+        try:
+            cursor.close()
+            conn.close()
+        except Exception:
+            pass
+
+    return render_template('admin.html',
+                           total_habitaciones=total_habitaciones,
+                           habitaciones_disponibles=habitaciones_disponibles,
+                           total_reservas=total_reservas)
+
+
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        usuario = request.form.get('usuario')
+        password = request.form.get('password')
+
+        conn = conectar_bd()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute('SELECT * FROM usuarios WHERE usuario = %s', (usuario,))
+        usuario_db = cursor.fetchone()
+        conn.close()
+
+        if usuario_db and usuario_db.get('password') == password:
+            # Iniciar sesión
+            session['user_id'] = usuario_db.get('id')
+            session['usuario'] = usuario_db.get('usuario')
+            # Usar rol desde la base de datos si está presente
+            session['rol'] = usuario_db.get('rol') if usuario_db.get('rol') else 'user'
+            flash('Has iniciado sesión correctamente.', 'success')
+            return redirect(url_for('admin_dashboard'))
+        else:
+            flash('Credenciales inválidas.', 'danger')
+
+    return render_template('admin_login.html')
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('Sesión cerrada.', 'info')
+    return redirect(url_for('index'))
+
 @app.route('/')
 def index():
     return render_template('index.html')

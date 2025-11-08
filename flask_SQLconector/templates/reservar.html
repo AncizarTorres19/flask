@@ -19,86 +19,141 @@
         }
         
         .container {
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
         }
         
         .card {
             background: white;
             border-radius: 15px;
-            padding: 30px;
+            padding: 40px;
             box-shadow: 0 10px 30px rgba(30, 58, 138, 0.1);
             margin-bottom: 20px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            border-color: #06b6d4;
+            box-shadow: 0 20px 40px rgba(30, 58, 138, 0.15);
         }
         
         h1 {
             color: #1e3a8a;
             margin-bottom: 10px;
+            font-size: 2.2rem;
+            font-weight: bold;
+        }
+        
+        .habitacion-nombre {
+            color: #64748b;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         label {
             display: block;
             color: #1e3a8a;
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         input {
             width: 100%;
-            padding: 12px;
+            padding: 15px;
             border: 2px solid #06b6d4;
             border-radius: 8px;
             font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
         }
         
         input:focus {
             outline: none;
             border-color: #0891b2;
-            box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+            transform: translateY(-2px);
         }
         
         .btn-confirmar {
             background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
             color: white;
             border: none;
-            padding: 15px 30px;
+            padding: 18px 30px;
             border-radius: 8px;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
             width: 100%;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(6, 182, 212, 0.3);
+            margin-top: 10px;
         }
         
         .btn-confirmar:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(6, 182, 212, 0.4);
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
         }
         
         .btn-volver {
-            background: #64748b;
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
             color: white;
             text-decoration: none;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 8px;
             display: inline-block;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(100, 116, 139, 0.3);
+        }
+        
+        .btn-volver:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(100, 116, 139, 0.4);
         }
         
         .info-reserva {
-            background: #e0f2fe;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid #bae6fd;
         }
         
         .info-item {
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             color: #1e3a8a;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .info-item strong {
+            min-width: 120px;
+        }
+        
+        @media (max-width: 768px) {
+            .card {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
@@ -108,12 +163,21 @@
         
         <div class="card">
             <h1>Confirmar Reserva</h1>
-            <p style="color: #64748b; margin-bottom: 20px;">Habitación: {{ habitacion.nombre }}</p>
+            <p class="habitacion-nombre">Habitación: {{ habitacion.nombre }}</p>
             
             <div class="info-reserva">
-                <div class="info-item"><strong>📅 Entrada:</strong> {{ entrada }}</div>
-                <div class="info-item"><strong>📅 Salida:</strong> {{ salida }}</div>
-                <div class="info-item"><strong>👥 Huéspedes:</strong> {{ huespedes }}</div>
+                <div class="info-item">
+                    <strong>📅 Entrada:</strong> 
+                    <span>{{ entrada }}</span>
+                </div>
+                <div class="info-item">
+                    <strong>📅 Salida:</strong> 
+                    <span>{{ salida }}</span>
+                </div>
+                <div class="info-item">
+                    <strong>👥 Huéspedes:</strong> 
+                    <span>{{ huespedes }}</span>
+                </div>
             </div>
             
             <form method="POST" action="{{ url_for('confirmar_reserva') }}">
@@ -124,17 +188,17 @@
                 
                 <div class="form-group">
                     <label for="nombre">Nombre Completo *</label>
-                    <input type="text" id="nombre" name="nombre" required>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Ej: Juan Pérez">
                 </div>
                 
                 <div class="form-group">
                     <label for="cedula">Cédula / Documento *</label>
-                    <input type="text" id="cedula" name="cédula" required>
+                    <input type="text" id="cedula" name="cédula" required placeholder="Ej: 1234567890">
                 </div>
                 
                 <div class="form-group">
                     <label for="telefono">Teléfono *</label>
-                    <input type="tel" id="telefono" name="telefono" required>
+                    <input type="tel" id="telefono" name="telefono" required placeholder="Ej: 3001234567">
                 </div>
                 
                 <button type="submit" class="btn-confirmar">✓ Confirmar Reserva</button>

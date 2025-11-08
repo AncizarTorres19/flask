@@ -10,14 +10,22 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
+        /* Evitar scroll en la página principal y centrar la tarjeta
+           Si el contenido fuese demasiado grande, la tarjeta tendrá
+           su propio scroll interno, pero la página no mostrará barra */
+        html, body {
+            height: 100vh;
+            overflow: hidden; /* quita scrollbar del documento */
+        }
+
         body {
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
+            /* mantener algo de separación alrededor */
             padding: 20px;
         }
         
@@ -29,6 +37,15 @@
             max-width: 600px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             animation: slideIn 0.5s ease;
+            /* intentamos que la tarjeta siempre quepa en la pantalla
+               y evitar scroll interno: la tarjeta usa layout flex y
+               reduce su padding/fuentes en pantallas pequeñas */
+            max-height: calc(100vh - 40px);
+            overflow: visible; /* no queremos scrollbar interno */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         
         @keyframes slideIn {
@@ -94,6 +111,50 @@
             color: #64748b;
             margin: 20px 0;
             line-height: 1.6;
+        }
+
+        /* Reglas responsivas basadas en la altura de la ventana
+           para forzar que la tarjeta se adapte y evitar scroll interno */
+        @media (max-height: 760px) {
+            .confirmation-card {
+                padding: 36px;
+            }
+            .success-icon {
+                font-size: 4rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .confirmation-details {
+                padding: 14px;
+            }
+            .detail-item {
+                font-size: 1rem;
+            }
+            .btn-home {
+                padding: 12px 32px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-height: 560px) {
+            /* aún más compacta en teléfonos muy pequeños / ventanas reducidas */
+            .confirmation-card {
+                padding: 20px;
+                border-radius: 14px;
+            }
+            .success-icon {
+                font-size: 3.4rem;
+                margin-bottom: 12px;
+            }
+            h1 {
+                font-size: 1.6rem;
+                margin-bottom: 10px;
+            }
+            .success-message { font-size: 0.95rem; margin: 10px 0; }
+            .confirmation-details { padding: 10px; }
+            .detail-item { font-size: 0.95rem; }
+            .btn-home { padding: 10px 24px; font-size: 0.95rem; }
         }
     </style>
 </head>
