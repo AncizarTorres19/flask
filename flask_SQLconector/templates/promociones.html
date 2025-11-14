@@ -1,0 +1,300 @@
+{% extends "base_publico.html" %}
+
+{% block title %}Promociones - GHL Hoteles{% endblock %}
+
+{% block extra_styles %}
+<style>
+  .hero-promo {
+    background: linear-gradient(rgba(239, 68, 68, 0.9), rgba(220, 38, 38, 0.85)),
+                url('https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+    color: white;
+    text-align: center;
+    padding: 5rem 2rem;
+  }
+
+  .hero-promo h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  }
+
+  .hero-promo p {
+    font-size: 1.4rem;
+    opacity: 0.95;
+  }
+
+  .promo-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+
+  .promo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .promo-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(239, 68, 68, 0.15);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .promo-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(239, 68, 68, 0.25);
+  }
+
+  .promo-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    padding: 0.7rem 1.2rem;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    z-index: 2;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.5);
+  }
+
+  .promo-img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+  }
+
+  .promo-content {
+    padding: 2rem;
+  }
+
+  .promo-content h3 {
+    color: #1e3a8a;
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+  }
+
+  .promo-content p {
+    color: #64748b;
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+  }
+
+  .promo-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #fef2f2;
+    border-radius: 10px;
+  }
+
+  .price-old {
+    text-decoration: line-through;
+    color: #94a3b8;
+    font-size: 0.9rem;
+  }
+
+  .price-new {
+    color: #ef4444;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  .promo-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .promo-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(6, 182, 212, 0.4);
+  }
+
+  .countdown {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-radius: 15px;
+    margin-bottom: 3rem;
+  }
+
+  .countdown h2 {
+    color: #1e3a8a;
+    margin-bottom: 1rem;
+  }
+
+  .countdown-timer {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .countdown-item {
+    background: white;
+    padding: 1.5rem 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
+  .countdown-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ef4444;
+  }
+
+  .countdown-label {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero-promo">
+  <h1>🎉 Promociones Especiales</h1>
+  <p>Aprovecha nuestras ofertas exclusivas y ahorra hasta un 50%</p>
+</section>
+
+<div class="promo-section">
+  <div class="countdown">
+    <h2>⏰ Oferta por Tiempo Limitado</h2>
+    <p>Esta promoción termina pronto. ¡No te la pierdas!</p>
+    <div class="countdown-timer">
+      <div class="countdown-item">
+        <div class="countdown-number">2</div>
+        <div class="countdown-label">Días</div>
+      </div>
+      <div class="countdown-item">
+        <div class="countdown-number">15</div>
+        <div class="countdown-label">Horas</div>
+      </div>
+      <div class="countdown-item">
+        <div class="countdown-number">32</div>
+        <div class="countdown-label">Minutos</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="promo-grid">
+    <div class="promo-card">
+      <div class="promo-badge">50% OFF</div>
+      <img src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Promo San Andrés" class="promo-img">
+      <div class="promo-content">
+        <h3>Escapada a San Andrés</h3>
+        <p>4 días / 3 noches en el paraíso caribeño. Incluye desayunos y actividades acuáticas.</p>
+        <div class="promo-details">
+          <div>
+            <div class="price-old">Antes: $2.200.000</div>
+            <div class="price-new">$1.100.000</div>
+          </div>
+          <div style="color: #ef4444; font-weight: bold;">¡Ahorra 50%!</div>
+        </div>
+        <a href="#" class="promo-btn">Reservar Ahora</a>
+      </div>
+    </div>
+
+    <div class="promo-card">
+      <div class="promo-badge">35% OFF</div>
+      <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Promo Cartagena" class="promo-img">
+      <div class="promo-content">
+        <h3>Romántico Cartagena</h3>
+        <p>Experiencia de lujo en la ciudad amurallada. Spa de cortesía para parejas.</p>
+        <div class="promo-details">
+          <div>
+            <div class="price-old">Antes: $1.850.000</div>
+            <div class="price-new">$1.202.500</div>
+          </div>
+          <div style="color: #ef4444; font-weight: bold;">¡Ahorra 35%!</div>
+        </div>
+        <a href="#" class="promo-btn">Reservar Ahora</a>
+      </div>
+    </div>
+
+    <div class="promo-card">
+      <div class="promo-badge">42% OFF</div>
+      <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Promo Barú" class="promo-img">
+      <div class="promo-content">
+        <h3>Todo Incluido Barú</h3>
+        <p>Relájate en la playa con todo pago: comidas, bebidas y entretenimiento ilimitado.</p>
+        <div class="promo-details">
+          <div>
+            <div class="price-old">Antes: $1.680.000</div>
+            <div class="price-new">$974.400</div>
+          </div>
+          <div style="color: #ef4444; font-weight: bold;">¡Ahorra 42%!</div>
+        </div>
+        <a href="#" class="promo-btn">Reservar Ahora</a>
+      </div>
+    </div>
+
+    <div class="promo-card">
+      <div class="promo-badge">30% OFF</div>
+      <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Promo Santa Marta" class="promo-img">
+      <div class="promo-content">
+        <h3>Aventura en Santa Marta</h3>
+        <p>Descubre la magia del Caribe y la Sierra Nevada. Tours incluidos.</p>
+        <div class="promo-details">
+          <div>
+            <div class="price-old">Antes: $1.450.000</div>
+            <div class="price-new">$1.015.000</div>
+          </div>
+          <div style="color: #ef4444; font-weight: bold;">¡Ahorra 30%!</div>
+        </div>
+        <a href="#" class="promo-btn">Reservar Ahora</a>
+      </div>
+    </div>
+
+    <div class="promo-card">
+      <div class="promo-badge">45% OFF</div>
+      <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Promo Bogotá" class="promo-img">
+      <div class="promo-content">
+        <h3>Experiencia Bogotá</h3>
+        <p>2 noches en la capital. City tour y cena gourmet incluidos.</p>
+        <div class="promo-details">
+          <div>
+            <div class="price-old">Antes: $950.000</div>
+            <div class="price-new">$522.500</div>
+          </div>
+          <div style="color: #ef4444; font-weight: bold;">¡Ahorra 45%!</div>
+        </div>
+        <a href="#" class="promo-btn">Reservar Ahora</a>
+      </div>
+    </div>
+
+    <div class="promo-card">
+      <div class="promo-badge">38% OFF</div>
+      <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Promo Medellín" class="promo-img">
+      <div class="promo-content">
+        <h3>Medellín Moderna</h3>
+        <p>Conoce la ciudad de la eterna primavera. Incluye transporte y desayunos.</p>
+        <div class="promo-details">
+          <div>
+            <div class="price-old">Antes: $1.100.000</div>
+            <div class="price-new">$682.000</div>
+          </div>
+          <div style="color: #ef4444; font-weight: bold;">¡Ahorra 38%!</div>
+        </div>
+        <a href="#" class="promo-btn">Reservar Ahora</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

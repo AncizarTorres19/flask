@@ -398,12 +398,13 @@
     <nav class="navbar">
       <div class="logo">GHL<span> Hoteles</span></div>
       <ul class="menu">
-        <li><a href="#">Inicio</a></li>
-        <li><a href="#">Promociones</a></li>
-        <li><a href="#">Hoteles</a></li>
-        <li><a href="#">Todo Incluido</a></li>
-        <li><a href="#">Eventos</a></li>
-        <li><a href="#">Sostenibilidad</a></li>
+        <li><a href="{{ url_for('index') }}">Inicio</a></li>
+        <li><a href="{{ url_for('promociones') }}">Promociones</a></li>
+        <li><a href="{{ url_for('hoteles') }}">Hoteles</a></li>
+        <li><a href="{{ url_for('todo_incluido') }}">Todo Incluido</a></li>
+        <li><a href="{{ url_for('eventos') }}">Eventos</a></li>
+        <li><a href="{{ url_for('sostenibilidad') }}">Sostenibilidad</a></li>
+        <li><a href="{{ url_for('admin_login') }}">Admin</a></li>
       </ul>
     </nav>
   </header>

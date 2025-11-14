@@ -1,0 +1,332 @@
+{% extends "base_publico.html" %}
+
+{% block title %}Sostenibilidad - GHL Hoteles{% endblock %}
+
+{% block extra_styles %}
+<style>
+  .hero-sostenibilidad {
+    background: linear-gradient(rgba(34, 197, 94, 0.9), rgba(22, 163, 74, 0.85)),
+                url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+    color: white;
+    text-align: center;
+    padding: 5rem 2rem;
+  }
+
+  .hero-sostenibilidad h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .sostenibilidad-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+
+  .intro-box {
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    padding: 3rem;
+    border-radius: 15px;
+    text-align: center;
+    margin-bottom: 4rem;
+    border-left: 5px solid #22c55e;
+  }
+
+  .intro-box h2 {
+    color: #166534;
+    margin-bottom: 1rem;
+  }
+
+  .intro-box p {
+    color: #166534;
+    font-size: 1.2rem;
+    line-height: 1.8;
+  }
+
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .pillar-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(34, 197, 94, 0.1);
+    transition: all 0.3s ease;
+    border-top: 5px solid #22c55e;
+  }
+
+  .pillar-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(34, 197, 94, 0.2);
+  }
+
+  .pillar-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .pillar-card h3 {
+    color: #166534;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
+
+  .pillar-card ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .pillar-card li {
+    padding: 0.5rem 0;
+    color: #64748b;
+    display: flex;
+    align-items: start;
+    gap: 0.5rem;
+  }
+
+  .pillar-card li::before {
+    content: '✓';
+    color: #22c55e;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+
+  .achievements-section {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    padding: 3rem 2rem;
+    border-radius: 15px;
+    margin-bottom: 3rem;
+  }
+
+  .achievements-section h2 {
+    text-align: center;
+    color: #166534;
+    margin-bottom: 2rem;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .stat-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  }
+
+  .stat-number {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #22c55e;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-label {
+    color: #166534;
+    font-weight: 600;
+  }
+
+  .certifications-section {
+    margin-top: 3rem;
+  }
+
+  .certifications-section h2 {
+    text-align: center;
+    color: #166534;
+    margin-bottom: 2rem;
+  }
+
+  .cert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+
+  .cert-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+  }
+
+  .cert-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(34, 197, 94, 0.15);
+  }
+
+  .cert-badge {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  .cert-card h4 {
+    color: #166534;
+    margin-bottom: 0.5rem;
+  }
+
+  .cert-card p {
+    color: #64748b;
+    font-size: 0.9rem;
+  }
+
+  .commitment-cta {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: 3rem;
+  }
+
+  .commitment-cta h2 {
+    margin-bottom: 1rem;
+  }
+
+  .commitment-cta p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    opacity: 0.95;
+  }
+
+  .commitment-btn {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    background: white;
+    color: #22c55e;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+  }
+
+  .commitment-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero-sostenibilidad">
+  <h1>🌱 Compromiso con la Sostenibilidad</h1>
+  <p>Construyendo un futuro más verde, un huésped a la vez</p>
+</section>
+
+<div class="sostenibilidad-section">
+  <div class="intro-box">
+    <h2>Nuestra Misión Ambiental</h2>
+    <p>En GHL Hoteles creemos que la hospitalidad y la sostenibilidad van de la mano. Estamos comprometidos con la protección del medio ambiente y el desarrollo de prácticas responsables que garanticen un futuro sostenible para las próximas generaciones.</p>
+  </div>
+
+  <h2 style="text-align: center; color: #166534; margin-bottom: 3rem;">Los 3 Pilares de Nuestra Sostenibilidad</h2>
+
+  <div class="pillars-grid">
+    <div class="pillar-card">
+      <div class="pillar-icon">🌍</div>
+      <h3>Medio Ambiente</h3>
+      <ul>
+        <li>Reducción del 40% en consumo de agua mediante sistemas de recolección de aguas lluvia</li>
+        <li>Energía 100% renovable en todas nuestras instalaciones</li>
+        <li>Eliminación de plásticos de un solo uso</li>
+        <li>Programas de reciclaje y compostaje</li>
+        <li>Jardines con especies nativas y polinizadores</li>
+      </ul>
+    </div>
+
+    <div class="pillar-card">
+      <div class="pillar-icon">👥</div>
+      <h3>Comunidad</h3>
+      <ul>
+        <li>Contratación prioritaria de personal local</li>
+        <li>Programas de capacitación y desarrollo profesional</li>
+        <li>Apoyo a emprendedores y proveedores locales</li>
+        <li>Proyectos educativos en escuelas cercanas</li>
+        <li>Voluntariado corporativo mensual</li>
+      </ul>
+    </div>
+
+    <div class="pillar-card">
+      <div class="pillar-icon">🍃</div>
+      <h3>Operaciones Verdes</h3>
+      <ul>
+        <li>Productos de limpieza 100% biodegradables</li>
+        <li>Menús con ingredientes orgánicos y de comercio justo</li>
+        <li>Toallas y sábanas de algodón orgánico certificado</li>
+        <li>Sistema de gestión de residuos con tasa de reciclaje del 85%</li>
+        <li>Iluminación LED en todas las áreas</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="achievements-section">
+    <h2>🏆 Nuestros Logros</h2>
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-number">60%</div>
+        <div class="stat-label">Reducción de CO₂</div>
+      </div>
+
+      <div class="stat-box">
+        <div class="stat-number">500K</div>
+        <div class="stat-label">Árboles Plantados</div>
+      </div>
+
+      <div class="stat-box">
+        <div class="stat-number">85%</div>
+        <div class="stat-label">Reciclaje de Residuos</div>
+      </div>
+
+      <div class="stat-box">
+        <div class="stat-number">100%</div>
+        <div class="stat-label">Energía Renovable</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="certifications-section">
+    <h2>🎖️ Certificaciones y Reconocimientos</h2>
+    <div class="cert-grid">
+      <div class="cert-card">
+        <div class="cert-badge">🌟</div>
+        <h4>Green Key</h4>
+        <p>Certificación internacional de excelencia ambiental en turismo</p>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-badge">🍃</div>
+        <h4>ISO 14001</h4>
+        <p>Sistema de gestión ambiental certificado</p>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-badge">♻️</div>
+        <h4>Carbono Neutro</h4>
+        <p>Compensación total de nuestra huella de carbono</p>
+      </div>
+
+      <div class="cert-card">
+        <div class="cert-badge">🏅</div>
+        <h4>Rainforest Alliance</h4>
+        <p>Certificación de turismo sostenible</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="commitment-cta">
+    <h2>🌿 Sé Parte del Cambio</h2>
+    <p>Cada huésped que elige GHL Hoteles contribuye a un mundo más sostenible</p>
+    <a href="#" class="commitment-btn">Conoce Más de Nuestras Iniciativas</a>
+  </div>
+</div>
+{% endblock %}

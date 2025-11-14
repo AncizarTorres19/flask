@@ -1,0 +1,301 @@
+{% extends "base_publico.html" %}
+
+{% block title %}Todo Incluido - GHL Hoteles{% endblock %}
+
+{% block extra_styles %}
+<style>
+  .hero-todo-incluido {
+    background: linear-gradient(rgba(16, 185, 129, 0.9), rgba(5, 150, 105, 0.85)),
+                url('https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+    color: white;
+    text-align: center;
+    padding: 5rem 2rem;
+  }
+
+  .hero-todo-incluido h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .benefits-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .benefit-card {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+
+  .benefit-card:hover {
+    transform: translateY(-5px);
+    border-color: #10b981;
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.2);
+  }
+
+  .benefit-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .benefit-card h3 {
+    color: #1e3a8a;
+    margin-bottom: 0.5rem;
+  }
+
+  .benefit-card p {
+    color: #64748b;
+    line-height: 1.6;
+  }
+
+  .packages-section {
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+    padding: 4rem 2rem;
+    margin-top: 3rem;
+  }
+
+  .packages-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #1e3a8a;
+    margin-bottom: 3rem;
+  }
+
+  .packages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+
+  .package-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .package-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(16, 185, 129, 0.2);
+  }
+
+  .package-header {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .package-header h3 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .package-price {
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+
+  .package-period {
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+
+  .package-body {
+    padding: 2rem;
+  }
+
+  .package-features {
+    list-style: none;
+    margin-bottom: 1.5rem;
+  }
+
+  .package-features li {
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .package-features li:last-child {
+    border-bottom: none;
+  }
+
+  .check-icon {
+    color: #10b981;
+    font-weight: bold;
+  }
+
+  .package-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .package-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+  }
+
+  .highlight-package {
+    border: 3px solid #10b981;
+    position: relative;
+  }
+
+  .popular-badge {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ef4444;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.85rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero-todo-incluido">
+  <h1>✨ Experiencia Todo Incluido</h1>
+  <p>Relájate sin preocupaciones. Todo está cubierto.</p>
+</section>
+
+<div class="benefits-section">
+  <h2 class="section-title">¿Qué Incluye?</h2>
+  
+  <div class="benefits-grid">
+    <div class="benefit-card">
+      <div class="benefit-icon">🍽️</div>
+      <h3>Alimentos Ilimitados</h3>
+      <p>Desayuno, almuerzo, cena y snacks disponibles todo el día en nuestros restaurantes buffet y a la carta.</p>
+    </div>
+
+    <div class="benefit-card">
+      <div class="benefit-icon">🍹</div>
+      <h3>Bebidas Premium</h3>
+      <p>Bebidas alcohólicas y no alcohólicas de marcas nacionales e internacionales sin límite.</p>
+    </div>
+
+    <div class="benefit-card">
+      <div class="benefit-icon">🏊</div>
+      <h3>Actividades Acuáticas</h3>
+      <p>Kayak, paddle board, snorkel y más actividades acuáticas sin costo adicional.</p>
+    </div>
+
+    <div class="benefit-card">
+      <div class="benefit-icon">🎭</div>
+      <h3>Entretenimiento</h3>
+      <p>Shows nocturnos, música en vivo, animación diurna y eventos especiales cada semana.</p>
+    </div>
+
+    <div class="benefit-card">
+      <div class="benefit-icon">🏋️</div>
+      <h3>Gimnasio & Spa</h3>
+      <p>Acceso ilimitado al gimnasio. Descuentos especiales en tratamientos de spa.</p>
+    </div>
+
+    <div class="benefit-card">
+      <div class="benefit-icon">👶</div>
+      <h3>Kids Club</h3>
+      <p>Programa de actividades supervisadas para niños. ¡Los padres también merecen descansar!</p>
+    </div>
+  </div>
+</div>
+
+<div class="packages-section">
+  <div class="packages-container">
+    <h2 class="section-title">Nuestros Paquetes</h2>
+    
+    <div class="packages-grid">
+      <div class="package-card">
+        <div class="package-header">
+          <h3>🌊 Básico</h3>
+          <div class="package-price">$974.400</div>
+          <div class="package-period">por persona / 3 noches</div>
+        </div>
+        <div class="package-body">
+          <ul class="package-features">
+            <li><span class="check-icon">✓</span> Alojamiento en habitación estándar</li>
+            <li><span class="check-icon">✓</span> Todas las comidas incluidas</li>
+            <li><span class="check-icon">✓</span> Bebidas nacionales</li>
+            <li><span class="check-icon">✓</span> Actividades diurnas</li>
+            <li><span class="check-icon">✓</span> WiFi en áreas comunes</li>
+          </ul>
+          <a href="#" class="package-btn">Reservar Ahora</a>
+        </div>
+      </div>
+
+      <div class="package-card highlight-package">
+        <div class="popular-badge">MÁS POPULAR</div>
+        <div class="package-header">
+          <h3>⭐ Premium</h3>
+          <div class="package-price">$1.450.000</div>
+          <div class="package-period">por persona / 3 noches</div>
+        </div>
+        <div class="package-body">
+          <ul class="package-features">
+            <li><span class="check-icon">✓</span> Habitación con vista al mar</li>
+            <li><span class="check-icon">✓</span> Todas las comidas + restaurantes a la carta</li>
+            <li><span class="check-icon">✓</span> Bebidas premium e importadas</li>
+            <li><span class="check-icon">✓</span> Actividades + deportes acuáticos</li>
+            <li><span class="check-icon">✓</span> WiFi en todo el hotel</li>
+            <li><span class="check-icon">✓</span> 1 masaje de cortesía</li>
+            <li><span class="check-icon">✓</span> Late check-out</li>
+          </ul>
+          <a href="#" class="package-btn">Reservar Ahora</a>
+        </div>
+      </div>
+
+      <div class="package-card">
+        <div class="package-header">
+          <h3>💎 VIP Luxury</h3>
+          <div class="package-price">$2.100.000</div>
+          <div class="package-period">por persona / 3 noches</div>
+        </div>
+        <div class="package-body">
+          <ul class="package-features">
+            <li><span class="check-icon">✓</span> Suite con jacuzzi privado</li>
+            <li><span class="check-icon">✓</span> Mayordomo personal 24/7</li>
+            <li><span class="check-icon">✓</span> Acceso a restaurantes exclusivos</li>
+            <li><span class="check-icon">✓</span> Bebidas ultra premium</li>
+            <li><span class="check-icon">✓</span> Todas las actividades</li>
+            <li><span class="check-icon">✓</span> Spa ilimitado</li>
+            <li><span class="check-icon">✓</span> Transfer aeropuerto incluido</li>
+            <li><span class="check-icon">✓</span> Cena romántica en la playa</li>
+          </ul>
+          <a href="#" class="package-btn">Reservar Ahora</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

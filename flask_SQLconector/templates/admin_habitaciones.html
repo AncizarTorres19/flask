@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Habitaciones - Admin GHL Hoteles</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <style>
+        .habitaciones-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            color: #1e3a8a;
+            margin: 0;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+        }
+
+        .habitaciones-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .habitacion-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .habitacion-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .habitacion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .habitacion-titulo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin: 0;
+        }
+
+        .badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-disponible {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-ocupada {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .habitacion-info {
+            margin: 1rem 0;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .info-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .info-value {
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        .precio-destacado {
+            font-size: 1.5rem;
+            color: #10b981;
+        }
+
+        .habitacion-descripcion {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+            line-height: 1.5;
+        }
+
+        .habitacion-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.65rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-edit {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #2563eb;
+        }
+
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #dc2626;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            color: #1e3a8a;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+
+        .alert-danger {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-topbar">
+        <div class="logo-admin">🏨 GHL Admin</div>
+        <div class="topbar-actions">
+            <a href="{{ url_for('index') }}" class="btn-home">🏠 Inicio</a>
+            <div class="user-info">
+                <div class="user-avatar">{{ session.get('usuario', 'A')[0].upper() }}</div>
+                <span>{{ session.get('usuario', 'Admin') }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('admin_dashboard') }}" class="nav-item">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{{ url_for('admin_habitaciones') }}" class="nav-item active">
+                    <span class="nav-icon">🏨</span>
+                    <span>Habitaciones</span>
+                </a>
+                <a href="{{ url_for('admin_reservas') }}" class="nav-item">
+                    <span class="nav-icon">📅</span>
+                    <span>Reservas</span>
+                </a>
+                <a href="{{ url_for('admin_clientes') }}" class="nav-item">
+                    <span class="nav-icon">👥</span>
+                    <span>Clientes</span>
+                </a>
+                <a href="{{ url_for('admin_finanzas') }}" class="nav-item">
+                    <span class="nav-icon">💰</span>
+                    <span>Finanzas</span>
+                </a>
+                <a href="{{ url_for('admin_reportes') }}" class="nav-item">
+                    <span class="nav-icon">📈</span>
+                    <span>Reportes</span>
+                </a>
+                <a href="{{ url_for('admin_configuracion') }}" class="nav-item">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Configuración</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="{{ url_for('logout') }}" class="nav-item">
+                    <span class="nav-icon">🚪</span>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="admin-content">
+            <div class="habitaciones-container">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {% if category == 'success' %}✓{% else %}⚠{% endif %}
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <div class="page-header">
+                    <h1>🏨 Gestión de Habitaciones</h1>
+                    <a href="{{ url_for('admin_crear_habitacion') }}" class="btn-primary">
+                        ➕ Nueva Habitación
+                    </a>
+                </div>
+
+                {% if habitaciones %}
+                    <div class="habitaciones-grid">
+                        {% for habitacion in habitaciones %}
+                        <div class="habitacion-card">
+                            <div class="habitacion-header">
+                                <h3 class="habitacion-titulo">{{ habitacion.nombre }}</h3>
+                                {% if habitacion.disponible %}
+                                    <span class="badge badge-disponible">✓ Disponible</span>
+                                {% else %}
+                                    <span class="badge badge-ocupada">✗ Ocupada</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="habitacion-info">
+                                <div class="info-row">
+                                    <span class="info-label">Capacidad</span>
+                                    <span class="info-value">👥 {{ habitacion.capacidad }} personas</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Precio por noche</span>
+                                    <span class="info-value precio-destacado">
+                                        ${{ "{:,.0f}".format(habitacion.precio) }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {% if habitacion.descripcion %}
+                            <p class="habitacion-descripcion">
+                                {{ habitacion.descripcion[:100] }}{% if habitacion.descripcion|length > 100 %}...{% endif %}
+                            </p>
+                            {% endif %}
+
+                            <div class="habitacion-actions">
+                                <a href="{{ url_for('admin_editar_habitacion', id=habitacion.id) }}" class="btn btn-edit">
+                                    ✏️ Editar
+                                </a>
+                                <a href="{{ url_for('admin_eliminar_habitacion', id=habitacion.id) }}" 
+                                   class="btn btn-delete"
+                                   onclick="return confirm('¿Estás seguro de eliminar esta habitación?')">
+                                    🗑️ Eliminar
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🏨</div>
+                        <h3>No hay habitaciones registradas</h3>
+                        <p>Comienza creando tu primera habitación para el hotel</p>
+                        <a href="{{ url_for('admin_crear_habitacion') }}" class="btn-primary">
+                            ➕ Crear Primera Habitación
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </main>
+    </div>
+</body>
+</html>

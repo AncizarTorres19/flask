@@ -6,168 +6,774 @@
         <title>Panel de Administración — GHL Hoteles</title>
         <!-- Bootstrap 5 CDN -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-        <!-- Proyecto: estilos generales -->
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-        <!-- Estilos específicos del admin -->
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            :root {
+                --primary-color: #667eea;
+                --secondary-color: #764ba2;
+                --success-color: #10b981;
+                --warning-color: #f59e0b;
+                --danger-color: #ef4444;
+                --info-color: #06b6d4;
+                --dark-color: #1e293b;
+                --light-bg: #f8fafc;
+                --sidebar-width: 260px;
+            }
+
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background: var(--light-bg);
+                overflow-x: hidden;
+            }
+
+            /* Topbar */
+            .admin-topbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 70px;
+                background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+                box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                padding: 0 2rem;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .admin-topbar::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+                opacity: 0.15;
+                z-index: 0;
+            }
+
+            .admin-topbar > * {
+                position: relative;
+                z-index: 1;
+            }
+
+            .topbar-left {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .logo-admin {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: white;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            }
+
+            .topbar-right {
+                margin-left: auto;
+                display: flex;
+                align-items: center;
+                gap: 1.5rem;
+            }
+
+            .user-info {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                padding: 0.5rem 1rem;
+                background: rgba(255, 255, 255, 0.2);
+                backdrop-filter: blur(10px);
+                border-radius: 25px;
+                color: white;
+            }
+
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.3);
+                border: 2px solid rgba(255, 255, 255, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: bold;
+            }
+
+            .btn-home {
+                padding: 0.6rem 1.2rem;
+                background: rgba(255, 255, 255, 0.2);
+                backdrop-filter: blur(10px);
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                color: white;
+                border-radius: 8px;
+                text-decoration: none;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .btn-home:hover {
+                background: rgba(255, 255, 255, 0.3);
+                border-color: rgba(255, 255, 255, 0.5);
+                color: white;
+                transform: translateY(-2px);
+            }
+
+            .btn-logout {
+                padding: 0.6rem 1.2rem;
+                background: linear-gradient(135deg, var(--danger-color), #dc2626);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                text-decoration: none;
+                font-weight: 600;
+                transition: all 0.3s ease;
+            }
+
+            .btn-logout:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+                color: white;
+            }
+
+            /* Sidebar */
+            .admin-sidebar {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: var(--sidebar-width);
+                height: calc(100vh - 70px);
+                background: white;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+                padding: 2rem 0;
+                overflow-y: auto;
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar-menu {
+                list-style: none;
+                padding: 0;
+            }
+
+            .sidebar-menu li {
+                margin-bottom: 0.5rem;
+            }
+
+            .sidebar-menu a {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                padding: 1rem 2rem;
+                color: #64748b;
+                text-decoration: none;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                position: relative;
+            }
+
+            .sidebar-menu a::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 4px;
+                background: var(--primary-color);
+                transform: scaleY(0);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar-menu a:hover,
+            .sidebar-menu a.active {
+                color: var(--primary-color);
+                background: linear-gradient(90deg, rgba(102, 126, 234, 0.1), transparent);
+            }
+
+            .sidebar-menu a.active::before {
+                transform: scaleY(1);
+            }
+
+            .menu-icon {
+                font-size: 1.3rem;
+            }
+
+            /* Main Content */
+            .admin-main {
+                margin-left: var(--sidebar-width);
+                margin-top: 70px;
+                padding: 2rem;
+                min-height: calc(100vh - 70px);
+            }
+
+            .page-header {
+                margin-bottom: 2rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+                font-weight: bold;
+                color: var(--dark-color);
+                margin-bottom: 0.5rem;
+            }
+
+            .page-subtitle {
+                color: #64748b;
+                font-size: 0.95rem;
+            }
+
+            /* Stats Cards */
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1.5rem;
+                margin-bottom: 2rem;
+            }
+
+            .stat-card {
+                background: white;
+                border-radius: 15px;
+                padding: 1.5rem;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .stat-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 100px;
+                height: 100px;
+                background: var(--card-color);
+                opacity: 0.1;
+                border-radius: 50%;
+                transform: translate(30%, -30%);
+            }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            }
+
+            .stat-card-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: start;
+                margin-bottom: 1rem;
+            }
+
+            .stat-icon {
+                width: 50px;
+                height: 50px;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5rem;
+            }
+
+            .stat-label {
+                color: #64748b;
+                font-size: 0.9rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .stat-value {
+                font-size: 2.5rem;
+                font-weight: bold;
+                color: var(--dark-color);
+                line-height: 1;
+            }
+
+            .stat-trend {
+                display: inline-block;
+                padding: 0.25rem 0.75rem;
+                border-radius: 20px;
+                font-size: 0.85rem;
+                font-weight: 600;
+                margin-top: 0.5rem;
+            }
+
+            .trend-up {
+                background: #dcfce7;
+                color: #16a34a;
+            }
+
+            .trend-down {
+                background: #fee2e2;
+                color: #dc2626;
+            }
+
+            /* Content Cards */
+            .content-card {
+                background: white;
+                border-radius: 15px;
+                padding: 1.5rem;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                margin-bottom: 1.5rem;
+            }
+
+            .card-header-custom {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1.5rem;
+                padding-bottom: 1rem;
+                border-bottom: 2px solid var(--light-bg);
+            }
+
+            .card-title-custom {
+                font-size: 1.25rem;
+                font-weight: bold;
+                color: var(--dark-color);
+            }
+
+            .btn-action {
+                padding: 0.5rem 1rem;
+                border-radius: 8px;
+                font-weight: 600;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                border: none;
+                cursor: pointer;
+            }
+
+            .btn-primary-custom {
+                background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+                color: white;
+            }
+
+            .btn-primary-custom:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            }
+
+            /* Table */
+            .table-custom {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            .table-custom thead th {
+                background: var(--light-bg);
+                color: #64748b;
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: 0.85rem;
+                padding: 1rem;
+                text-align: left;
+                letter-spacing: 0.5px;
+            }
+
+            .table-custom tbody td {
+                padding: 1rem;
+                border-bottom: 1px solid var(--light-bg);
+                color: #475569;
+            }
+
+            .table-custom tbody tr:hover {
+                background: rgba(102, 126, 234, 0.05);
+            }
+
+            .empty-state {
+                text-align: center;
+                padding: 3rem;
+                color: #94a3b8;
+            }
+
+            .empty-state-icon {
+                font-size: 4rem;
+                margin-bottom: 1rem;
+                opacity: 0.5;
+            }
+
+            /* Activity Feed */
+            .activity-item {
+                display: flex;
+                gap: 1rem;
+                padding: 1rem 0;
+                border-bottom: 1px solid var(--light-bg);
+            }
+
+            .activity-item:last-child {
+                border-bottom: none;
+            }
+
+            .activity-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.2rem;
+                flex-shrink: 0;
+            }
+
+            .activity-content {
+                flex: 1;
+            }
+
+            .activity-title {
+                font-weight: 600;
+                color: var(--dark-color);
+                margin-bottom: 0.25rem;
+            }
+
+            .activity-time {
+                font-size: 0.85rem;
+                color: #94a3b8;
+            }
+
+            /* Quick Actions */
+            .quick-actions {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+
+            .quick-action-btn {
+                padding: 1.5rem;
+                background: white;
+                border: 2px solid var(--light-bg);
+                border-radius: 12px;
+                text-align: center;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                color: var(--dark-color);
+            }
+
+            .quick-action-btn:hover {
+                border-color: var(--primary-color);
+                transform: translateY(-3px);
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            }
+
+            .quick-action-icon {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .quick-action-label {
+                font-weight: 600;
+                font-size: 0.9rem;
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                .admin-sidebar {
+                    transform: translateX(-100%);
+                }
+
+                .admin-sidebar.open {
+                    transform: translateX(0);
+                }
+
+                .admin-main {
+                    margin-left: 0;
+                }
+
+                .topbar-right {
+                    gap: 0.5rem;
+                }
+
+                .user-info span {
+                    display: none;
+                }
+            }
+
+            .toggle-sidebar {
+                display: none;
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                color: white;
+            }
+
+            @media (max-width: 768px) {
+                .toggle-sidebar {
+                    display: block;
+                }
+            }
+        </style>
     </head>
-    <body class="bg-light">
-        <header class="admin-topbar shadow-sm">
-            <div class="container-fluid d-flex align-items-center justify-content-between py-2">
-                <div class="d-flex align-items-center gap-3">
-                    <button class="btn btn-outline-secondary d-md-none" id="toggleSidebar">☰</button>
-                    <a class="navbar-brand fw-bold text-primary" href="#">GHL Hoteles <span class="text-muted small">Admin</span></a>
+    <body>
+    <body>
+        <!-- Topbar -->
+        <header class="admin-topbar">
+            <div class="topbar-left">
+                <button class="toggle-sidebar" id="toggleSidebar">☰</button>
+                <div class="logo-admin">🏨 GHL Hoteles Admin</div>
+            </div>
+            <div class="topbar-right">
+                <a href="{{ url_for('index') }}" class="btn-home">
+                    <span>🏠</span> Inicio
+                </a>
+                <div class="user-info">
+                    <div class="user-avatar">{{ session.get('usuario', 'A')[0].upper() }}</div>
+                    <span><strong>{{ session.get('usuario') or 'Administrador' }}</strong></span>
                 </div>
-                <div class="d-flex align-items-center gap-3">
-                    <div class="me-3 small text-muted">Bienvenido, <strong>{{ session.get('usuario') or 'Administrador' }}</strong></div>
-                    <a class="btn btn-sm btn-outline-danger" href="{{ url_for('logout') }}">Cerrar sesión</a>
-                </div>
+                <a href="{{ url_for('logout') }}" class="btn-logout">Cerrar sesión</a>
             </div>
         </header>
 
-        <div class="admin-layout">
-            <aside class="admin-sidebar bg-white shadow-sm">
-                <nav class="p-3">
-                    <ul class="nav flex-column">
-                        <li class="nav-item"><a class="nav-link active" href="#">Dashboard</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Habitaciones</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Reservas</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Clientes</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">Ajustes</a></li>
-                    </ul>
-                </nav>
-            </aside>
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="{{ url_for('admin_dashboard') }}" class="active"><span class="menu-icon">📊</span> Dashboard</a></li>
+                <li><a href="{{ url_for('admin_habitaciones') }}"><span class="menu-icon">🏨</span> Habitaciones</a></li>
+                <li><a href="{{ url_for('admin_reservas') }}"><span class="menu-icon">📅</span> Reservas</a></li>
+                <li><a href="{{ url_for('admin_clientes') }}"><span class="menu-icon">👥</span> Clientes</a></li>
+                <li><a href="{{ url_for('admin_finanzas') }}"><span class="menu-icon">💰</span> Finanzas</a></li>
+                <li><a href="{{ url_for('admin_reportes') }}"><span class="menu-icon">📈</span> Reportes</a></li>
+                <li><a href="{{ url_for('admin_configuracion') }}"><span class="menu-icon">⚙️</span> Configuración</a></li>
+            </ul>
+        </aside>
 
-            <main class="admin-main p-4">
-                <div class="container-fluid">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h2 class="h4">Panel de Administración</h2>
-                        <small class="text-muted">Última actualización: {{ "now" | safe }}</small>
-                    </div>
+        <!-- Main Content -->
+        <main class="admin-main">
+            <div class="page-header">
+                <h1 class="page-title">Panel de Administración</h1>
+                <p class="page-subtitle">Bienvenido de vuelta, gestiona tu hotel desde aquí</p>
+            </div>
 
-                    <!-- Stats cards -->
-                    <div class="row g-3 mb-4">
-                        <div class="col-12 col-sm-6 col-md-3">
-                            <div class="card shadow-sm h-100 border-0">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <small class="text-muted">Total de Habitaciones</small>
-                                            <h3 class="mt-2 mb-0">{{ total_habitaciones | default(0) }}</h3>
-                                        </div>
-                                        <div class="stat-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center">
-                                            🏨
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card" style="--card-color: #667eea;">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-label">Total Habitaciones</div>
+                            <div class="stat-value">{{ total_habitaciones | default(0) }}</div>
+                            <span class="stat-trend trend-up">↑ 12% este mes</span>
                         </div>
-
-                        <div class="col-12 col-sm-6 col-md-3">
-                            <div class="card shadow-sm h-100 border-0">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <small class="text-muted">Habitaciones Disponibles</small>
-                                            <h3 class="mt-2 mb-0">{{ habitaciones_disponibles | default(0) }}</h3>
-                                        </div>
-                                        <div class="stat-icon bg-success text-white rounded-circle d-flex align-items-center justify-content-center">
-                                            ✅
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-sm-6 col-md-3">
-                            <div class="card shadow-sm h-100 border-0">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <small class="text-muted">Total de Reservas</small>
-                                            <h3 class="mt-2 mb-0">{{ total_reservas | default(0) }}</h3>
-                                        </div>
-                                        <div class="stat-icon bg-warning text-white rounded-circle d-flex align-items-center justify-content-center">
-                                            📅
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-sm-6 col-md-3">
-                            <div class="card shadow-sm h-100 border-0">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <small class="text-muted">Acciones rápidas</small>
-                                            <div class="mt-2 d-flex gap-2">
-                                                <a class="btn btn-sm btn-primary" href="#">Nueva Habitación</a>
-                                                <a class="btn btn-sm btn-outline-primary" href="#">Ver Reservas</a>
-                                            </div>
-                                        </div>
-                                        <div class="stat-icon bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center">
-                                            ⚙️
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="stat-icon" style="background: rgba(102, 126, 234, 0.15); color: #667eea;">
+                            🏨
                         </div>
                     </div>
-
-                    <!-- Panel central -->
-                    <div class="row g-4">
-                        <div class="col-12 col-lg-8">
-                            <div class="card shadow-sm">
-                                <div class="card-body">
-                                    <h5 class="card-title">Reservas recientes</h5>
-                                    <p class="text-muted small">Listado breve de las reservas más recientes (integración pendiente).</p>
-                                    <div class="table-responsive">
-                                        <table class="table table-hover">
-                                            <thead class="table-light small">
-                                                <tr>
-                                                    <th>Reserva</th>
-                                                    <th>Cliente</th>
-                                                    <th>Habitación</th>
-                                                    <th>Entrada</th>
-                                                    <th>Salida</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td colspan="5" class="text-center text-muted">No hay datos cargados aún.</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-lg-4">
-                            <div class="card shadow-sm">
-                                <div class="card-body">
-                                    <h5 class="card-title">Actividad</h5>
-                                    <ul class="list-unstyled small">
-                                        <li>• Login admin reciente</li>
-                                        <li>• Reserva creada (simulación)</li>
-                                        <li>• Habitaciones actualizadas</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
-            </main>
-        </div>
 
-        <!-- Bootstrap JS (opcional) -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+                <div class="stat-card" style="--card-color: #10b981;">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-label">Disponibles</div>
+                            <div class="stat-value">{{ habitaciones_disponibles | default(0) }}</div>
+                            <span class="stat-trend trend-up">↑ 8% vs ayer</span>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                            ✅
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card" style="--card-color: #f59e0b;">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-label">Total Reservas</div>
+                            <div class="stat-value">{{ total_reservas | default(0) }}</div>
+                            <span class="stat-trend trend-up">↑ 23% este mes</span>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
+                            📅
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card" style="--card-color: #06b6d4;">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-label">Total Clientes</div>
+                            <div class="stat-value">{{ total_clientes | default(0) }}</div>
+                            <span class="stat-trend trend-up">↑ 15% este mes</span>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(6, 182, 212, 0.15); color: #06b6d4;">
+                            👥
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ingresos Destacados -->
+            <div class="stats-grid" style="margin-top: 1.5rem;">
+                <div class="stat-card" style="--card-color: #10b981; grid-column: span 2;">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-label">Ingresos Hoy</div>
+                            <div class="stat-value">$2.5M</div>
+                            <span class="stat-trend trend-up">↑ 15% vs ayer</span>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(6, 182, 212, 0.15); color: #06b6d4;">
+                            👥
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ingresos Destacados -->
+            <div class="stats-grid" style="margin-top: 1.5rem;">
+                <div class="stat-card" style="--card-color: #10b981; grid-column: span 2;">
+                    <div class="stat-card-header">
+                        <div>
+                            <div class="stat-label">Ingresos Totales</div>
+                            <div class="stat-value">${{ "{:,.0f}".format(ingresos_totales | default(0)) }}</div>
+                            <span class="stat-trend trend-up">↑ Acumulado total</span>
+                        </div>
+                        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                            💰
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="content-card">
+                <div class="card-header-custom">
+                    <h3 class="card-title-custom">Acciones Rápidas</h3>
+                </div>
+                <div class="quick-actions">
+                    <a href="{{ url_for('admin_crear_habitacion') }}" class="quick-action-btn">
+                        <div class="quick-action-icon">➕</div>
+                        <div class="quick-action-label">Nueva Habitación</div>
+                    </a>
+                    <a href="{{ url_for('admin_reservas') }}" class="quick-action-btn">
+                        <div class="quick-action-icon">📝</div>
+                        <div class="quick-action-label">Ver Reservas</div>
+                    </a>
+                    <a href="{{ url_for('admin_clientes') }}" class="quick-action-btn">
+                        <div class="quick-action-icon">👤</div>
+                        <div class="quick-action-label">Ver Clientes</div>
+                    </a>
+                    <a href="{{ url_for('admin_reportes') }}" class="quick-action-btn">
+                        <div class="quick-action-icon">📊</div>
+                        <div class="quick-action-label">Ver Reportes</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Content Grid -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+                <!-- Recent Reservations -->
+                <div class="content-card">
+                    <div class="card-header-custom">
+                        <h3 class="card-title-custom">Reservas Recientes</h3>
+                        <button class="btn-action btn-primary-custom">Ver Todas</button>
+                    </div>
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>Habitación</th>
+                                <th>Check-in</th>
+                                <th>Check-out</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="6" class="empty-state">
+                                    <div class="empty-state-icon">📋</div>
+                                    <p>No hay reservas recientes</p>
+                                    <small>Las reservas aparecerán aquí cuando se creen</small>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Activity Feed -->
+                <div class="content-card">
+                    <div class="card-header-custom">
+                        <h3 class="card-title-custom">Actividad Reciente</h3>
+                    </div>
+                    <div>
+                        <div class="activity-item">
+                            <div class="activity-icon" style="background: rgba(102, 126, 234, 0.15); color: #667eea;">
+                                🔐
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Inicio de sesión exitoso</div>
+                                <div class="activity-time">{{ session.get('usuario') }} • Hace 2 minutos</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                                ✅
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Sistema actualizado</div>
+                                <div class="activity-time">Hace 1 hora</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">
+                                📊
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Reporte generado</div>
+                                <div class="activity-time">Hace 3 horas</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon" style="background: rgba(6, 182, 212, 0.15); color: #06b6d4;">
+                                🏨
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Habitaciones sincronizadas</div>
+                                <div class="activity-time">Hace 5 horas</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
         <script>
-            // Toggle sidebar en pantallas pequeñas
-            const btn = document.getElementById('toggleSidebar');
-            if (btn) btn.addEventListener('click', () => document.querySelector('.admin-sidebar').classList.toggle('open'));
+            // Toggle sidebar en móviles
+            const toggleBtn = document.getElementById('toggleSidebar');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    sidebar.classList.toggle('open');
+                });
+            }
+
+            // Cerrar sidebar al hacer click fuera (móviles)
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768) {
+                    if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+                        sidebar.classList.remove('open');
+                    }
+                }
+            });
+
+            // Actualizar hora en tiempo real
+            function updateTime() {
+                const now = new Date();
+                const time = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                document.querySelectorAll('.current-time').forEach(el => {
+                    el.textContent = time;
+                });
+            }
+            updateTime();
+            setInterval(updateTime, 60000);
         </script>
     </body>
 </html>

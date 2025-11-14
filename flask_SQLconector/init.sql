@@ -44,17 +44,21 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `nombre` varchar(100) NOT NULL,
   `usuario` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `rol` varchar(20) NOT NULL DEFAULT 'user',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `usuario` (`usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Insertar datos de ejemplo en habitaciones
+-- Insertar datos de ejemplo en habitaciones con precios en COP
 INSERT INTO `habitaciones` (`nombre`, `descripcion`, `capacidad`, `precio`, `disponible`) VALUES
-('Suite Familiar', 'Habitación amplia con 2 camas dobles', 4, 150.00, 1),
-('Habitación Doble', 'Ideal para parejas, con cama doble', 2, 90.00, 1),
-('Habitación Individual', 'Para una sola persona, cama sencilla', 1, 60.00, 1);
+('Suite Presidencial', 'Suite de lujo con jacuzzi, vista panorámica y sala de estar', 4, 580000.00, 1),
+('Suite Familiar', 'Habitación amplia con 2 camas dobles y zona de juegos', 4, 350000.00, 1),
+('Habitación Doble Ejecutiva', 'Ideal para parejas, con cama king size y escritorio', 2, 250000.00, 1),
+('Habitación Doble', 'Ideal para parejas, con cama doble estándar', 2, 180000.00, 1),
+('Habitación Individual', 'Para una sola persona, cama sencilla', 1, 120000.00, 1);
 
--- Insertar usuario admin
-INSERT INTO `usuarios` (`nombre`, `usuario`, `password`) VALUES
-('Administrador Principal', 'admin', 'admin123');
+-- Insertar usuarios admin
+INSERT INTO `usuarios` (`nombre`, `usuario`, `password`, `rol`) VALUES
+('Administrador Principal', 'admin', 'admin123', 'admin'),
+('Administrador Secundario', 'admin2', 'miPassSeguro', 'admin');

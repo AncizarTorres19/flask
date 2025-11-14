@@ -1,0 +1,374 @@
+{% extends "base_publico.html" %}
+
+{% block title %}Eventos - GHL Hoteles{% endblock %}
+
+{% block extra_styles %}
+<style>
+  .hero-eventos {
+    background: linear-gradient(rgba(139, 92, 246, 0.9), rgba(124, 58, 237, 0.85)),
+                url('https://images.unsplash.com/photo-1519167758481-83f29da8c2c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+    color: white;
+    text-align: center;
+    padding: 5rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-eventos::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+    opacity: 0.2;
+    z-index: 0;
+  }
+
+  .hero-eventos > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-eventos h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .hero-eventos p {
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+  }
+
+  .eventos-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+
+  .event-types {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .event-type-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.1);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+
+  .event-type-card:hover {
+    transform: translateY(-10px);
+    border-color: #8b5cf6;
+    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+  }
+
+  .event-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  .event-type-card h3 {
+    color: #1e3a8a;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+  }
+
+  .event-type-card p {
+    color: #64748b;
+    line-height: 1.6;
+  }
+
+  .facilities-section {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    padding: 3rem 2rem;
+    border-radius: 15px;
+    margin-bottom: 3rem;
+  }
+
+  .facilities-section h2 {
+    text-align: center;
+    color: #1e3a8a;
+    margin-bottom: 2rem;
+  }
+
+  .facilities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .facility-item {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  }
+
+  .facility-icon {
+    font-size: 2rem;
+  }
+
+  .facility-info h4 {
+    color: #1e3a8a;
+    margin-bottom: 0.3rem;
+  }
+
+  .facility-info p {
+    color: #64748b;
+    font-size: 0.9rem;
+  }
+
+  .gallery-section {
+    margin-top: 3rem;
+  }
+
+  .gallery-section h2 {
+    text-align: center;
+    color: #1e3a8a;
+    margin-bottom: 2rem;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    height: 250px;
+    background: #e5e7eb;
+  }
+
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    display: block;
+  }
+
+  .gallery-item:hover img {
+    transform: scale(1.1);
+  }
+
+  .gallery-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    color: white;
+    padding: 1.5rem;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+
+  .gallery-item:hover .gallery-overlay {
+    transform: translateY(0);
+  }
+
+  .contact-cta {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%),
+                url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+    background-blend-mode: multiply;
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: 15px;
+    text-align: center;
+    margin-top: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-cta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+    opacity: 0.15;
+    z-index: 0;
+  }
+
+  .contact-cta > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .contact-cta h2 {
+    margin-bottom: 1rem;
+  }
+
+  .contact-cta p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    opacity: 0.95;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    background: white;
+    color: #8b5cf6;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+  }
+
+  .cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero-eventos">
+  <h1>🎉 Eventos Corporativos & Sociales</h1>
+  <p>El escenario perfecto para tus momentos más importantes</p>
+</section>
+
+<div class="eventos-section">
+  <h2 style="text-align: center; color: #1e3a8a; margin-bottom: 3rem;">Tipos de Eventos</h2>
+  
+  <div class="event-types">
+    <div class="event-type-card">
+      <div class="event-icon">💼</div>
+      <h3>Eventos Corporativos</h3>
+      <p>Conferencias, convenciones, capacitaciones y reuniones de negocios con tecnología de punta.</p>
+    </div>
+
+    <div class="event-type-card">
+      <div class="event-icon">💒</div>
+      <h3>Bodas</h3>
+      <p>El día más especial de tu vida en un entorno paradisíaco. Organización completa incluida.</p>
+    </div>
+
+    <div class="event-type-card">
+      <div class="event-icon">🎂</div>
+      <h3>Celebraciones</h3>
+      <p>Cumpleaños, aniversarios, quinceañeros y eventos sociales con servicio personalizado.</p>
+    </div>
+
+    <div class="event-type-card">
+      <div class="event-icon">🎓</div>
+      <h3>Graduaciones</h3>
+      <p>Celebra tus logros académicos con elegancia. Espacios amplios y catering de lujo.</p>
+    </div>
+  </div>
+
+  <div class="facilities-section">
+    <h2>🏢 Nuestras Instalaciones</h2>
+    <div class="facilities-grid">
+      <div class="facility-item">
+        <div class="facility-icon">🎤</div>
+        <div class="facility-info">
+          <h4>Salones Equipados</h4>
+          <p>Desde 50 hasta 500 personas</p>
+        </div>
+      </div>
+
+      <div class="facility-item">
+        <div class="facility-icon">📡</div>
+        <div class="facility-info">
+          <h4>Tecnología AV</h4>
+          <p>Proyectores, pantallas LED, sonido profesional</p>
+        </div>
+      </div>
+
+      <div class="facility-item">
+        <div class="facility-icon">🍽️</div>
+        <div class="facility-info">
+          <h4>Catering Personalizado</h4>
+          <p>Menús a la medida de tu evento</p>
+        </div>
+      </div>
+
+      <div class="facility-item">
+        <div class="facility-icon">🅿️</div>
+        <div class="facility-info">
+          <h4>Parqueadero</h4>
+          <p>Amplio y seguro para tus invitados</p>
+        </div>
+      </div>
+
+      <div class="facility-item">
+        <div class="facility-icon">📶</div>
+        <div class="facility-info">
+          <h4>WiFi de Alta Velocidad</h4>
+          <p>Conexión dedicada para eventos</p>
+        </div>
+      </div>
+
+      <div class="facility-item">
+        <div class="facility-icon">👔</div>
+        <div class="facility-info">
+          <h4>Coordinador de Eventos</h4>
+          <p>Asistencia personalizada 24/7</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gallery-section">
+    <h2>📸 Galería de Eventos</h2>
+    <div class="gallery-grid">
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Conferencia" loading="lazy">
+        <div class="gallery-overlay">
+          <h4>Conferencias Empresariales</h4>
+          <p>Espacios profesionales y modernos</p>
+        </div>
+      </div>
+
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Bodas" loading="lazy">
+        <div class="gallery-overlay">
+          <h4>Bodas de Ensueño</h4>
+          <p>Tu día perfecto frente al mar</p>
+        </div>
+      </div>
+
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Celebraciones" loading="lazy">
+        <div class="gallery-overlay">
+          <h4>Celebraciones Especiales</h4>
+          <p>Momentos inolvidables</p>
+        </div>
+      </div>
+
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Graduaciones" loading="lazy">
+        <div class="gallery-overlay">
+          <h4>Graduaciones</h4>
+          <p>Celebra tus logros con estilo</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-cta">
+    <h2>¿Listo para tu Evento?</h2>
+    <p>Nuestro equipo de especialistas está listo para hacer realidad tu evento perfecto</p>
+    <a href="#" class="cta-btn">Solicitar Cotización</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Reservas - Admin GHL Hoteles</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <style>
+        .reservas-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            color: #1e3a8a;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .filters {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-item {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-label {
+            display: block;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .filter-input {
+            width: 100%;
+            padding: 0.65rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 0.95rem;
+        }
+
+        .table tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        .badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-activa {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-completada {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-cancelada {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .cliente-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .cliente-nombre {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .cliente-detalle {
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+
+        .fecha-rango {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .fecha-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .precio-destacado {
+            font-weight: 700;
+            color: #10b981;
+            font-size: 1.1rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            color: #1e3a8a;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: #6b7280;
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+
+        .alert-danger {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .table-container {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-topbar">
+        <div class="logo-admin">🏨 GHL Admin</div>
+        <div class="topbar-actions">
+            <a href="{{ url_for('index') }}" class="btn-home">🏠 Inicio</a>
+            <div class="user-info">
+                <div class="user-avatar">{{ session.get('usuario', 'A')[0].upper() }}</div>
+                <span>{{ session.get('usuario', 'Admin') }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('admin_dashboard') }}" class="nav-item">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{{ url_for('admin_habitaciones') }}" class="nav-item">
+                    <span class="nav-icon">🏨</span>
+                    <span>Habitaciones</span>
+                </a>
+                <a href="{{ url_for('admin_reservas') }}" class="nav-item active">
+                    <span class="nav-icon">📅</span>
+                    <span>Reservas</span>
+                </a>
+                <a href="{{ url_for('admin_clientes') }}" class="nav-item">
+                    <span class="nav-icon">👥</span>
+                    <span>Clientes</span>
+                </a>
+                <a href="{{ url_for('admin_finanzas') }}" class="nav-item">
+                    <span class="nav-icon">💰</span>
+                    <span>Finanzas</span>
+                </a>
+                <a href="{{ url_for('admin_reportes') }}" class="nav-item">
+                    <span class="nav-icon">📈</span>
+                    <span>Reportes</span>
+                </a>
+                <a href="{{ url_for('admin_configuracion') }}" class="nav-item">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Configuración</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="{{ url_for('logout') }}" class="nav-item">
+                    <span class="nav-icon">🚪</span>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="admin-content">
+            <div class="reservas-container">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {% if category == 'success' %}✓{% else %}⚠{% endif %}
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <div class="page-header">
+                    <h1>📅 Gestión de Reservas</h1>
+                </div>
+
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-value">{{ reservas|length }}</div>
+                        <div class="stat-label">Total Reservas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">
+                            ${{ "{:,.0f}".format(reservas|sum(attribute='precio') if reservas else 0) }}
+                        </div>
+                        <div class="stat-label">Ingresos Totales</div>
+                    </div>
+                </div>
+
+                {% if reservas %}
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Cliente</th>
+                                    <th>Habitación</th>
+                                    <th>Fechas</th>
+                                    <th>Huéspedes</th>
+                                    <th>Precio</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for reserva in reservas %}
+                                <tr>
+                                    <td>#{{ reserva.id }}</td>
+                                    <td>
+                                        <div class="cliente-info">
+                                            <span class="cliente-nombre">{{ reserva.cliente_nombre }}</span>
+                                            <span class="cliente-detalle">📱 {{ reserva.telefono }}</span>
+                                            <span class="cliente-detalle">🆔 {{ reserva.cedula }}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <strong>{{ reserva.habitacion_nombre }}</strong>
+                                    </td>
+                                    <td>
+                                        <div class="fecha-rango">
+                                            <span class="fecha-item">
+                                                📥 {{ reserva.fecha_entrada.strftime('%d/%m/%Y') if reserva.fecha_entrada else 'N/A' }}
+                                            </span>
+                                            <span class="fecha-item">
+                                                📤 {{ reserva.fecha_salida.strftime('%d/%m/%Y') if reserva.fecha_salida else 'N/A' }}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>👥 {{ reserva.numero_huespedes }}</td>
+                                    <td>
+                                        <span class="precio-destacado">
+                                            ${{ "{:,.0f}".format(reserva.precio) }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('admin_eliminar_reserva', id=reserva.id) }}" 
+                                           class="btn btn-sm btn-danger"
+                                           onclick="return confirm('¿Estás seguro de eliminar esta reserva? La habitación quedará disponible nuevamente.')"
+                                           style="background: #ef4444; color: white; padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-size: 0.85rem;">
+                                            🗑️ Eliminar
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📅</div>
+                        <h3>No hay reservas registradas</h3>
+                        <p>Las reservas aparecerán aquí cuando los clientes realicen reservaciones</p>
+                    </div>
+                {% endif %}
+            </div>
+        </main>
+    </div>
+</body>
+</html>

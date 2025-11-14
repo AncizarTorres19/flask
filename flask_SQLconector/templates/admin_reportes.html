@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes - Admin GHL Hoteles</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <style>
+        .reportes-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            color: #1e3a8a;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .page-subtitle {
+            color: #6b7280;
+            font-size: 1rem;
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .report-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .report-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .report-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .report-icon-blue {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+        }
+
+        .report-icon-green {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .report-icon-purple {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+        }
+
+        .report-icon-orange {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .report-title {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+
+        .report-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 0.5rem;
+        }
+
+        .report-detail {
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+
+        .report-sections {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .report-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1e3a8a;
+        }
+
+        .btn-export {
+            padding: 0.65rem 1.25rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+
+        .btn-export:hover {
+            transform: translateY(-2px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-box {
+            padding: 1.5rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-box-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-box-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar-container {
+            margin-top: 1rem;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .progress-label-text {
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        .progress-label-value {
+            color: #6b7280;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e5e7eb;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        .insights-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .insight-item {
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .insight-icon {
+            font-size: 1.5rem;
+        }
+
+        .insight-content {
+            flex: 1;
+        }
+
+        .insight-title {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .insight-text {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .chart-placeholder {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 3rem;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        @media (max-width: 768px) {
+            .report-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-topbar">
+        <div class="logo-admin">🏨 GHL Admin</div>
+        <div class="topbar-actions">
+            <a href="{{ url_for('index') }}" class="btn-home">🏠 Inicio</a>
+            <div class="user-info">
+                <div class="user-avatar">{{ session.get('usuario', 'A')[0].upper() }}</div>
+                <span>{{ session.get('usuario', 'Admin') }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('admin_dashboard') }}" class="nav-item">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{{ url_for('admin_habitaciones') }}" class="nav-item">
+                    <span class="nav-icon">🏨</span>
+                    <span>Habitaciones</span>
+                </a>
+                <a href="{{ url_for('admin_reservas') }}" class="nav-item">
+                    <span class="nav-icon">📅</span>
+                    <span>Reservas</span>
+                </a>
+                <a href="{{ url_for('admin_clientes') }}" class="nav-item">
+                    <span class="nav-icon">👥</span>
+                    <span>Clientes</span>
+                </a>
+                <a href="{{ url_for('admin_finanzas') }}" class="nav-item">
+                    <span class="nav-icon">💰</span>
+                    <span>Finanzas</span>
+                </a>
+                <a href="{{ url_for('admin_reportes') }}" class="nav-item active">
+                    <span class="nav-icon">📈</span>
+                    <span>Reportes</span>
+                </a>
+                <a href="{{ url_for('admin_configuracion') }}" class="nav-item">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Configuración</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="{{ url_for('logout') }}" class="nav-item">
+                    <span class="nav-icon">🚪</span>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="admin-content">
+            <div class="reportes-container">
+                <div class="page-header">
+                    <h1>📈 Reportes y Análisis</h1>
+                    <p class="page-subtitle">Estadísticas y métricas clave del hotel</p>
+                </div>
+
+                <div class="report-grid">
+                    <div class="report-card">
+                        <div class="report-icon report-icon-blue">📅</div>
+                        <div class="report-title">Total Reservas</div>
+                        <div class="report-value">{{ total_reservas }}</div>
+                        <div class="report-detail">Todas las reservas registradas</div>
+                    </div>
+
+                    <div class="report-card">
+                        <div class="report-icon report-icon-green">👥</div>
+                        <div class="report-title">Total Clientes</div>
+                        <div class="report-value">{{ total_clientes }}</div>
+                        <div class="report-detail">Clientes únicos registrados</div>
+                    </div>
+
+                    <div class="report-card">
+                        <div class="report-icon report-icon-purple">💵</div>
+                        <div class="report-title">Precio Promedio</div>
+                        <div class="report-value">${{ "{:,.0f}".format(precio_promedio) }}</div>
+                        <div class="report-detail">Por reserva</div>
+                    </div>
+
+                    <div class="report-card">
+                        <div class="report-icon report-icon-orange">📊</div>
+                        <div class="report-title">Tasa de Ocupación</div>
+                        <div class="report-value">{{ tasa_ocupacion }}%</div>
+                        <div class="report-detail">Habitaciones ocupadas</div>
+                    </div>
+                </div>
+
+                <div class="report-sections">
+                    <div class="report-section">
+                        <div class="section-header">
+                            <h2 class="section-title">📊 Estadísticas Generales</h2>
+                            <a href="#" class="btn-export">📥 Exportar PDF</a>
+                        </div>
+
+                        <div class="stats-grid">
+                            <div class="stat-box">
+                                <div class="stat-box-value">{{ total_reservas }}</div>
+                                <div class="stat-box-label">Reservas Totales</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-box-value">{{ total_clientes }}</div>
+                                <div class="stat-box-label">Clientes Únicos</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-box-value">${{ "{:,.0f}".format(precio_promedio) }}</div>
+                                <div class="stat-box-label">Ticket Promedio</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-box-value">{{ tasa_ocupacion }}%</div>
+                                <div class="stat-box-label">Ocupación</div>
+                            </div>
+                        </div>
+
+                        <div class="progress-bar-container">
+                            <div class="progress-label">
+                                <span class="progress-label-text">Tasa de Ocupación</span>
+                                <span class="progress-label-value">{{ tasa_ocupacion }}% del total</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{ tasa_ocupacion }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="report-section">
+                        <div class="section-header">
+                            <h2 class="section-title">💡 Insights y Recomendaciones</h2>
+                        </div>
+
+                        <div class="insights-list">
+                            <div class="insight-item">
+                                <div class="insight-icon">📈</div>
+                                <div class="insight-content">
+                                    <div class="insight-title">Rendimiento de Reservas</div>
+                                    <div class="insight-text">
+                                        El hotel tiene {{ total_reservas }} reservas registradas con un precio promedio de ${{ "{:,.0f}".format(precio_promedio) }}.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="insight-item">
+                                <div class="insight-icon">🏨</div>
+                                <div class="insight-content">
+                                    <div class="insight-title">Ocupación</div>
+                                    <div class="insight-text">
+                                        La tasa de ocupación actual es del {{ tasa_ocupacion }}%. 
+                                        {% if tasa_ocupacion < 50 %}
+                                        Considera implementar promociones para aumentar las reservas.
+                                        {% elif tasa_ocupacion >= 50 and tasa_ocupacion < 80 %}
+                                        Buen nivel de ocupación. Mantén las estrategias actuales.
+                                        {% else %}
+                                        Excelente tasa de ocupación. Considera ajustar precios al alza.
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="insight-item">
+                                <div class="insight-icon">👥</div>
+                                <div class="insight-content">
+                                    <div class="insight-title">Base de Clientes</div>
+                                    <div class="insight-text">
+                                        Tienes {{ total_clientes }} clientes registrados. 
+                                        {% if total_clientes > 0 %}
+                                        Promedio de {{ "%.1f"|format(total_reservas / total_clientes if total_clientes > 0 else 0) }} reservas por cliente.
+                                        {% else %}
+                                        Comienza a captar clientes para hacer crecer tu negocio.
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="insight-item">
+                                <div class="insight-icon">💰</div>
+                                <div class="insight-content">
+                                    <div class="insight-title">Análisis de Precios</div>
+                                    <div class="insight-text">
+                                        El precio promedio por reserva es de ${{ "{:,.0f}".format(precio_promedio) }}. 
+                                        Evalúa la competencia para optimizar tu estrategia de precios.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="report-section">
+                        <div class="section-header">
+                            <h2 class="section-title">📊 Visualización de Datos</h2>
+                        </div>
+                        <div class="chart-placeholder">
+                            <p>📊 Espacio para gráficas y visualizaciones avanzadas</p>
+                            <p style="font-size: 0.85rem; margin-top: 0.5rem;">
+                                Integra librerías como Chart.js o Plotly para visualizaciones interactivas
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

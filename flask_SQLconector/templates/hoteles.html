@@ -1,0 +1,310 @@
+{% extends "base_publico.html" %}
+
+{% block title %}Nuestros Hoteles - GHL Hoteles{% endblock %}
+
+{% block extra_styles %}
+<style>
+  .hero-hoteles {
+    background: linear-gradient(rgba(30, 58, 138, 0.85), rgba(30, 64, 175, 0.85)),
+                url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+    color: white;
+    text-align: center;
+    padding: 5rem 2rem;
+  }
+
+  .hero-hoteles h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .hoteles-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+
+  .filter-bar {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 0.8rem 1.5rem;
+    border: 2px solid #06b6d4;
+    background: white;
+    color: #0891b2;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .filter-btn:hover,
+  .filter-btn.active {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  .hoteles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+
+  .hotel-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(30, 58, 138, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .hotel-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(30, 58, 138, 0.2);
+  }
+
+  .hotel-img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+  }
+
+  .hotel-content {
+    padding: 2rem;
+  }
+
+  .hotel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 1rem;
+  }
+
+  .hotel-content h3 {
+    color: #1e3a8a;
+    font-size: 1.5rem;
+  }
+
+  .hotel-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: #fbbf24;
+  }
+
+  .hotel-location {
+    color: #64748b;
+    margin-bottom: 1rem;
+  }
+
+  .hotel-amenities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .amenity-tag {
+    padding: 0.4rem 0.8rem;
+    background: #e0f2fe;
+    color: #0891b2;
+    border-radius: 15px;
+    font-size: 0.85rem;
+  }
+
+  .hotel-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .hotel-price {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #1e3a8a;
+  }
+
+  .hotel-btn {
+    padding: 0.8rem 1.5rem;
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .hotel-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(6, 182, 212, 0.4);
+  }
+
+  .map-section {
+    margin-top: 4rem;
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-radius: 15px;
+    text-align: center;
+  }
+
+  .map-section h2 {
+    color: #1e3a8a;
+    margin-bottom: 1rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero-hoteles">
+  <h1>🏨 Nuestros Hoteles</h1>
+  <p>Descubre los mejores destinos y experiencias en Colombia</p>
+</section>
+
+<div class="hoteles-section">
+  <div class="filter-bar">
+    <button class="filter-btn active">Todos</button>
+    <button class="filter-btn">Caribe</button>
+    <button class="filter-btn">Ciudades</button>
+    <button class="filter-btn">Playa</button>
+    <button class="filter-btn">Lujo</button>
+  </div>
+
+  <div class="hoteles-grid">
+    <div class="hotel-card">
+      <img src="https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="GHL San Luis" class="hotel-img">
+      <div class="hotel-content">
+        <div class="hotel-header">
+          <h3>GHL Hotel San Luis</h3>
+          <div class="hotel-rating">⭐⭐⭐⭐⭐</div>
+        </div>
+        <div class="hotel-location">📍 Isla de San Andrés</div>
+        <div class="hotel-amenities">
+          <span class="amenity-tag">Todo Incluido</span>
+          <span class="amenity-tag">Playa Privada</span>
+          <span class="amenity-tag">Spa</span>
+          <span class="amenity-tag">WiFi</span>
+        </div>
+        <div class="hotel-footer">
+          <div class="hotel-price">$1.098.000</div>
+          <a href="#" class="hotel-btn">Ver Detalles</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hotel-card">
+      <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="GHL Cartagena" class="hotel-img">
+      <div class="hotel-content">
+        <div class="hotel-header">
+          <h3>GHL Cartagena Premium</h3>
+          <div class="hotel-rating">⭐⭐⭐⭐⭐</div>
+        </div>
+        <div class="hotel-location">📍 Cartagena de Indias</div>
+        <div class="hotel-amenities">
+          <span class="amenity-tag">Vista al Mar</span>
+          <span class="amenity-tag">5 Restaurantes</span>
+          <span class="amenity-tag">Piscina</span>
+          <span class="amenity-tag">Spa</span>
+        </div>
+        <div class="hotel-footer">
+          <div class="hotel-price">$1.202.500</div>
+          <a href="#" class="hotel-btn">Ver Detalles</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hotel-card">
+      <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="GHL Barú" class="hotel-img">
+      <div class="hotel-content">
+        <div class="hotel-header">
+          <h3>GHL Barú Beach Resort</h3>
+          <div class="hotel-rating">⭐⭐⭐⭐⭐</div>
+        </div>
+        <div class="hotel-location">📍 Isla Barú</div>
+        <div class="hotel-amenities">
+          <span class="amenity-tag">Playa Privada</span>
+          <span class="amenity-tag">Deportes Acuáticos</span>
+          <span class="amenity-tag">Kids Club</span>
+          <span class="amenity-tag">Todo Incluido</span>
+        </div>
+        <div class="hotel-footer">
+          <div class="hotel-price">$974.400</div>
+          <a href="#" class="hotel-btn">Ver Detalles</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hotel-card">
+      <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="GHL Bogotá" class="hotel-img">
+      <div class="hotel-content">
+        <div class="hotel-header">
+          <h3>GHL Hotel Bogotá</h3>
+          <div class="hotel-rating">⭐⭐⭐⭐</div>
+        </div>
+        <div class="hotel-location">📍 Bogotá, Zona T</div>
+        <div class="hotel-amenities">
+          <span class="amenity-tag">Business Center</span>
+          <span class="amenity-tag">Restaurante</span>
+          <span class="amenity-tag">Gimnasio</span>
+          <span class="amenity-tag">WiFi</span>
+        </div>
+        <div class="hotel-footer">
+          <div class="hotel-price">$522.500</div>
+          <a href="#" class="hotel-btn">Ver Detalles</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hotel-card">
+      <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="GHL Medellín" class="hotel-img">
+      <div class="hotel-content">
+        <div class="hotel-header">
+          <h3>GHL Hotel Medellín</h3>
+          <div class="hotel-rating">⭐⭐⭐⭐</div>
+        </div>
+        <div class="hotel-location">📍 Medellín, El Poblado</div>
+        <div class="hotel-amenities">
+          <span class="amenity-tag">Rooftop</span>
+          <span class="amenity-tag">Piscina</span>
+          <span class="amenity-tag">Bar</span>
+          <span class="amenity-tag">WiFi</span>
+        </div>
+        <div class="hotel-footer">
+          <div class="hotel-price">$682.000</div>
+          <a href="#" class="hotel-btn">Ver Detalles</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hotel-card">
+      <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="GHL Santa Marta" class="hotel-img">
+      <div class="hotel-content">
+        <div class="hotel-header">
+          <h3>GHL Santa Marta</h3>
+          <div class="hotel-rating">⭐⭐⭐⭐⭐</div>
+        </div>
+        <div class="hotel-location">📍 Santa Marta, Rodadero</div>
+        <div class="hotel-amenities">
+          <span class="amenity-tag">Frente al Mar</span>
+          <span class="amenity-tag">Tours</span>
+          <span class="amenity-tag">Piscina</span>
+          <span class="amenity-tag">Restaurante</span>
+        </div>
+        <div class="hotel-footer">
+          <div class="hotel-price">$1.015.000</div>
+          <a href="#" class="hotel-btn">Ver Detalles</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="map-section">
+    <h2>📍 Encuentra tu Hotel Ideal</h2>
+    <p>Estamos ubicados en los mejores destinos de Colombia</p>
+  </div>
+</div>
+{% endblock %}
